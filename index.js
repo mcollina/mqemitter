@@ -29,7 +29,8 @@ function MQEmitter(opts) {
   this._messageQueue = []
   this._messageCallbacks = []
 
-  this.size = opts.size || 42 // magic number rulez
+  this.concurrency = opts.concurrency || opts.maxlength || 0
+  this.maxlength = opts.maxlength || 0
   this.current = 0
   this._matcher = new Qlobber()
 }
@@ -46,12 +47,17 @@ MQEmitter.prototype.emit = function emit(message, cb) {
   assert(message)
   assert(cb)
 
-  this._messageQueue.push(message)
-  this._messageCallbacks.push(cb)
+  if (this.concurrency > 0 && this.current >= this.concurrency) {
 
-  if (this.current < this.size) {
+    if (this.maxlength > 0 && this._messageQueue.length === this.maxlength) {
+      return cb(new Error('Max queue length reached'))
+    }
+
+    this._messageQueue.push(message)
+    this._messageCallbacks.push(cb)
+  } else {
     this.current++
-    this._next(new CallbackReceiver(this))
+    this._do(message, cb, new CallbackReceiver(this))
   }
 
   return this
@@ -60,14 +66,20 @@ MQEmitter.prototype.emit = function emit(message, cb) {
 MQEmitter.prototype._next = function next(receiver) {
   var message = this._messageQueue.shift()
     , callback = this._messageCallbacks.shift()
-    , matches
-    , match
-    , i
 
   if (!message) {
     this.current--
-    return this
+  } else {
+    this._do(message, callback, receiver)
   }
+
+  return this
+}
+
+MQEmitter.prototype._do = function(message, callback, receiver) {
+  var matches
+    , match
+    , i
 
   matches = this._matcher.match(message.topic)
 
