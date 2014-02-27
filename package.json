@@ -1,0 +1,17 @@
+{
+  "name": "mqemitter",
+  "version": "0.0.0",
+  "description": "An Opinionated Message Queue with an emitter-style API",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tap": "~0.4.8"
+  },
+  "dependencies": {
+    "qlobber": "~0.3.8"
+  }
+}
