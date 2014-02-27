@@ -19,30 +19,60 @@
 var Qlobber = require('qlobber').Qlobber
   , assert = require('assert')
 
-
-function MQEmitter() {
+function MQEmitter(opts) {
   if (!(this instanceof MQEmitter)) {
-    return new MQEmitter()
+    return new MQEmitter(opts)
   }
 
+  opts = opts || {}
 
-  this._matcher = new Qlobber();
+  this._messageQueue = []
+  this._messageCallbacks = []
+
+  this.size = opts.size || 42 // magic number rulez
+  this.current = 0
+  this._matcher = new Qlobber()
 }
 
 MQEmitter.prototype.on = function on(topic, notify) {
   assert(topic)
   assert(notify)
   this._matcher.add(topic, notify)
+
+  return this
 }
 
 MQEmitter.prototype.emit = function emit(message, cb) {
   assert(message)
   assert(cb)
 
-  var matches = this._matcher.match(message.topic)
-    , i
-    , receiver = new CallbackReceiver(matches.length, cb)
+  this._messageQueue.push(message)
+  this._messageCallbacks.push(cb)
+
+  if (this.current < this.size) {
+    this.current++
+    this._next(new CallbackReceiver(this))
+  }
+
+  return this
+}
+
+MQEmitter.prototype._next = function next(receiver) {
+  var message = this._messageQueue.shift()
+    , callback = this._messageCallbacks.shift()
+    , matches
     , match
+    , i
+
+  if (!message) {
+    this.current--
+    return this
+  }
+
+  matches = this._matcher.match(message.topic)
+
+  receiver.num = matches.length
+  receiver.callback = callback
 
   for (i = 0; i < matches.length; i++) {
     match = matches[i]
@@ -53,18 +83,23 @@ MQEmitter.prototype.emit = function emit(message, cb) {
       match(message, receiver.counter);
     }
   }
+
+  return this
 }
 
-function CallbackReceiver(num, callback) {
-  this.num = num;
-  this.callback = callback;
+function CallbackReceiver(mq) {
+  // these will be initialized by the caller
+  this.num = -1
+  this.callback = null
 
-  var that = this;
+  var that = this
 
   this.counter = function() {
     that.num--;
+
     if (that.num === 0) {
-      that.callback();
+      that.callback()
+      mq._next(that)
     }
   }
 }

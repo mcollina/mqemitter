@@ -82,3 +82,36 @@ test('support only one on argument', function(t) {
     t.end()
   })
 })
+
+test('queue size', function(t) {
+  t.plan(2)
+
+  var e = mq({ size: 1 })
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+    , start
+    , intermediate
+    , finish
+
+  e.on('hello 1', function(message, cb) {
+    setTimeout(cb, 5)
+  })
+
+  e.on('hello 2', function(message, cb) {
+    cb()
+  })
+
+  start = Date.now()
+  e.emit({ topic: 'hello 1' }, function() {
+    intermediate = Date.now()
+    t.ok(intermediate - start > 5, 'min 5 ms between start and intermediate')
+  })
+
+  e.emit({ topic: 'hello 2' }, function() {
+    finish = Date.now()
+    t.ok(finish - intermediate < 5, 'max 5 ms between intermediate and finish')
+    t.end()
+  })
+})
