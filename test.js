@@ -139,3 +139,28 @@ test('queue maxlength', function(t) {
     t.end()
   })
 })
+
+test('removeListener', function(t) {
+  var e = mq()
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+
+  e.on('hello world', function(message, cb) {
+    cb()
+  })
+
+  function toRemove(message, cb) {
+    t.ok(false, 'the toRemove function must not be called')
+    t.end()
+  }
+
+  e.on('hello world', toRemove)
+
+  e.removeListener('hello world', toRemove)
+
+  e.emit(expected, function() {
+    t.end()
+  })
+})
