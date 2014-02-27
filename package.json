@@ -6,10 +6,12 @@
   "scripts": {
     "test": "tap test.js"
   },
+  "pre-commit": ["test"],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "tap": "~0.4.8"
+    "tap": "~0.4.8",
+    "pre-commit": "0.0.4"
   },
   "dependencies": {
     "qlobber": "~0.3.8"
