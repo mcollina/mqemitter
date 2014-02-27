@@ -53,7 +53,6 @@ MQEmitter.prototype.removeListener = function removeListener(topic, notify) {
 
 MQEmitter.prototype.emit = function emit(message, cb) {
   assert(message)
-  assert(cb)
 
   if (this.concurrency > 0 && this.current >= this.concurrency) {
 
@@ -89,6 +88,10 @@ MQEmitter.prototype._do = function(message, callback, receiver) {
     , match
     , i
 
+  if (matches.length === 0) {
+    return this._next(receiver)
+  }
+
   receiver.num = matches.length
   receiver.callback = callback
 
@@ -116,7 +119,9 @@ function CallbackReceiver(mq) {
     that.num--;
 
     if (that.num === 0) {
-      that.callback()
+      if (that.callback) {
+        that.callback()
+      }
       mq._next(that)
     }
   }

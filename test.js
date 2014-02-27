@@ -3,7 +3,7 @@ var test = require('tap').test
   , mq = require('./')
 
 test('support on and emit', function(t) {
-  t.plan(1)
+  t.plan(2)
 
   var e = mq()
     , expected = {
@@ -12,6 +12,7 @@ test('support on and emit', function(t) {
       }
 
   e.on('hello world', function(message, cb) {
+    t.equal(e.current, 1, 'number of current messages')
     t.equal(message, expected)
     cb()
   })
@@ -84,7 +85,7 @@ test('support only one on argument', function(t) {
 })
 
 test('queue concurrency', function(t) {
-  t.plan(2)
+  t.plan(3)
 
   var e = mq({ concurrency: 1 })
     , expected = {
@@ -94,6 +95,8 @@ test('queue concurrency', function(t) {
     , start
     , intermediate
     , finish
+
+  t.equal(e.concurrency, 1)
 
   e.on('hello 1', function(message, cb) {
     setTimeout(cb, 5)
@@ -163,4 +166,31 @@ test('removeListener', function(t) {
   e.emit(expected, function() {
     t.end()
   })
+})
+
+test('without a callback on emit', function(t) {
+  var e = mq()
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+
+  e.on('hello world', function(message, cb) {
+    cb()
+    t.end()
+  })
+
+  e.emit(expected)
+})
+
+test('without any listeners', function(t) {
+  var e = mq()
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+
+  e.emit(expected)
+  t.equal(e.current, 0, 'reset the current messages trackers')
+  t.end()
 })
