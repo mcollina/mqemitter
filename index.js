@@ -25,9 +25,18 @@ MQEmitter.prototype.emit = function emit(topic, message, cb) {
   var matches = this._matcher.match(topic)
     , i
     , receiver = new CallbackReceiver(matches.length, cb)
+    , match
 
   for (i = 0; i < matches.length; i++) {
-    matches[i](topic, message, receiver.counter);
+    match = matches[i]
+
+    if (match.length === 3) {
+      match(topic, message, receiver.counter);
+    } else if (match.length === 2) {
+      match(message, receiver.counter);
+    } else {
+      match(receiver.counter);
+    }
   }
 }
 

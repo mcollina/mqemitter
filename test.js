@@ -2,7 +2,7 @@
 var test = require('tap').test
   , mq = require('./')
 
-test('it should support on and emit', function(t) {
+test('support on and emit', function(t) {
   t.plan(2)
 
   var e = mq()
@@ -19,7 +19,7 @@ test('it should support on and emit', function(t) {
   })
 })
 
-test('it should support multiple subscribers', function(t) {
+test('support multiple subscribers', function(t) {
   t.plan(2)
 
   var e = mq()
@@ -40,7 +40,7 @@ test('it should support multiple subscribers', function(t) {
   })
 })
 
-test('it should support wildcards', function(t) {
+test('support wildcards', function(t) {
   t.plan(1)
 
   var e = mq()
@@ -52,6 +52,38 @@ test('it should support wildcards', function(t) {
   })
 
   e.emit('hello.world', expected, function() {
+    t.end()
+  })
+})
+
+test('support two on arguments', function(t) {
+  t.plan(1)
+
+  var e = mq()
+    , expected = { my: 'message' }
+
+  e.on('hello world', function(message, cb) {
+    t.equal(message, expected)
+    cb()
+  })
+
+  e.emit('hello world', expected, function() {
+    t.end()
+  })
+})
+
+test('support only one on argument', function(t) {
+  t.plan(1)
+
+  var e = mq()
+    , expected = { my: 'message' }
+
+  e.on('hello world', function(cb) {
+    t.ok(true)
+    cb()
+  })
+
+  e.emit('hello world', expected, function() {
     t.end()
   })
 })
