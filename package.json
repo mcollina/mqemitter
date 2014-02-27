@@ -1,13 +1,31 @@
 {
   "name": "mqemitter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An Opinionated Message Queue with an emitter-style API",
   "main": "index.js",
   "scripts": {
     "test": "tap test.js"
   },
   "pre-commit": ["test"],
-  "author": "",
+  "website": "https://github.com/mcollina/mqemitter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcollina/mqemitter.git"
+  },
+  "bugs": {
+    "url": "http://github.com/mcollina/mqemitter/issues"
+  },
+  "author": "Matteo Collina <hello@matteocollina.com>",
+  "keywords": [
+    "emitter",
+    "events",
+    "message queue",
+    "mq",
+    "publish",
+    "subscribe",
+    "pub",
+    "sub"
+  ],
   "license": "ISC",
   "devDependencies": {
     "tap": "~0.4.8",
