@@ -35,11 +35,11 @@ MQEmitter.prototype.on = function on(topic, notify) {
   this._matcher.add(topic, notify)
 }
 
-MQEmitter.prototype.emit = function emit(topic, message, cb) {
-  assert(topic)
+MQEmitter.prototype.emit = function emit(message, cb) {
+  assert(message)
   assert(cb)
 
-  var matches = this._matcher.match(topic)
+  var matches = this._matcher.match(message.topic)
     , i
     , receiver = new CallbackReceiver(matches.length, cb)
     , match
@@ -47,12 +47,10 @@ MQEmitter.prototype.emit = function emit(topic, message, cb) {
   for (i = 0; i < matches.length; i++) {
     match = matches[i]
 
-    if (match.length === 3) {
-      match(topic, message, receiver.counter);
-    } else if (match.length === 2) {
-      match(message, receiver.counter);
-    } else {
+    if (match.length === 1) {
       match(receiver.counter);
+    } else {
+      match(message, receiver.counter);
     }
   }
 }
