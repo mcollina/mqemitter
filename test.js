@@ -39,3 +39,19 @@ test('it should support multiple subscribers', function(t) {
     t.end()
   })
 })
+
+test('it should support wildcards', function(t) {
+  t.plan(1)
+
+  var e = mq()
+    , expected = { my: 'message' }
+
+  e.on('hello.*', function(topic, message, cb) {
+    t.equal(topic, 'hello.world')
+    cb()
+  })
+
+  e.emit('hello.world', expected, function() {
+    t.end()
+  })
+})
