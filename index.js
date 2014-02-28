@@ -75,6 +75,7 @@ MQEmitter.prototype._next = function next(receiver) {
     , callback = this._messageCallbacks.shift()
 
   if (!message) {
+    // we are at the end of the queue
     this.current--
   } else {
     this._do(message, callback, receiver)
