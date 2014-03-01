@@ -65,25 +65,6 @@ test('support wildcards', function(t) {
   })
 })
 
-test('support only one on argument', function(t) {
-  t.plan(1)
-
-  var e = mq()
-    , expected = {
-          topic: 'hello world'
-        , payload: { my: 'message' }
-      }
-
-  e.on('hello world', function(cb) {
-    t.ok(true)
-    cb()
-  })
-
-  e.emit(expected, function() {
-    t.end()
-  })
-})
-
 test('queue concurrency', function(t) {
   t.plan(3)
 

@@ -102,12 +102,7 @@ MQEmitter.prototype._do = function(message, callback, receiver) {
 
   for (i = 0; i < matches.length; i++) {
     match = matches[i]
-
-    if (match.length === 1) {
-      match(receiver.counter);
-    } else {
-      match(message, receiver.counter);
-    }
+    match(message, receiver.counter);
   }
 
   return this
