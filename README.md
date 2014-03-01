@@ -7,7 +7,7 @@ callbacks.
   * <a href="#install">Installation</a>
   * <a href="#basic">Basic Example</a>
   * <a href="#api">API</a>
-  * <a href="#contributing">Contributing</a>
+  * <a href="#wildcards">Wildcards</a>
   * <a href="#licence">Licence &amp; copyright</a>
 
 <a name="install"></a>
