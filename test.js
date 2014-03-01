@@ -47,25 +47,6 @@ test('support multiple subscribers', function(t) {
   })
 })
 
-test('support wildcards', function(t) {
-  t.plan(1)
-
-  var e = mq()
-    , expected = {
-          topic: 'hello.world'
-        , payload: { my: 'message' }
-      }
-
-  e.on('hello.*', function(message, cb) {
-    t.equal(message.topic, 'hello.world')
-    cb()
-  })
-
-  e.emit(expected, function() {
-    t.end()
-  })
-})
-
 test('queue concurrency', function(t) {
   t.plan(4)
 
@@ -163,6 +144,99 @@ test('without any listeners and a callback', function(t) {
 
   e.emit(expected, function() {
     t.equal(e.current, 1, 'there 1 message that is being processed')
+    t.end()
+  })
+})
+
+test('support one level wildcard', function(t) {
+  t.plan(1)
+
+  var e = mq()
+    , expected = {
+          topic: 'hello/world'
+        , payload: { my: 'message' }
+      }
+
+  e.on('hello/+', function(message, cb) {
+    t.equal(message.topic, 'hello/world')
+    cb()
+  })
+
+  // this will not be catched
+  e.emit({ topic: 'hello/my/world' })
+
+  // this will be catched
+  e.emit(expected)
+})
+
+test('support changing one level wildcard', function(t) {
+  t.plan(1)
+
+  var e = mq({ wildcardOne: '~' })
+    , expected = {
+          topic: 'hello/world'
+        , payload: { my: 'message' }
+      }
+
+  e.on('hello/~', function(message, cb) {
+    t.equal(message.topic, 'hello/world')
+    cb()
+  })
+
+  e.emit(expected, function() {
+    t.end()
+  })
+})
+
+test('support deep wildcard', function(t) {
+  t.plan(1)
+
+  var e = mq()
+    , expected = {
+          topic: 'hello/my/world'
+        , payload: { my: 'message' }
+      }
+
+  e.on('hello/#', function(message, cb) {
+    t.equal(message.topic, 'hello/my/world')
+    cb()
+  })
+
+  e.emit(expected)
+})
+
+test('support changing deep wildcard', function(t) {
+  t.plan(1)
+
+  var e = mq({ wildcardSome: '*' })
+    , expected = {
+          topic: 'hello/my/world'
+        , payload: { my: 'message' }
+      }
+
+  e.on('hello/*', function(message, cb) {
+    t.equal(message.topic, 'hello/my/world')
+    cb()
+  })
+
+  e.emit(expected)
+})
+
+test('support changing the level separator', function(t) {
+  t.plan(1)
+
+  var e = mq({ separator: '~' })
+    , expected = {
+          topic: 'hello~world'
+        , payload: { my: 'message' }
+      }
+
+  e.on('hello~+', function(message, cb) {
+    t.equal(message.topic, 'hello~world')
+    cb()
+  })
+
+  e.emit(expected, function() {
     t.end()
   })
 })

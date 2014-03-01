@@ -1,7 +1,8 @@
 mqemitter&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mqemitter.png)](https://travis-ci.org/mcollina/mqemitter)
 =================================================================
 
-An Opinionated Message Queue with an emitter-style API
+An Opinionated Message Queue with an emitter-style API, but with
+callbacks.
 
   * <a href="#install">Installation</a>
   * <a href="#basic">Basic Example</a>
@@ -55,20 +56,26 @@ An MQEmitter accepts the following options:
 
 - `concurrency`: the maximum number of concurrent messages that can be
   on concurrent delivery.
+- `wildcardOne`: the char that will match one level wildcards.
+- `wildcardSome`: that char that will match multiple level wildcards.
+- `separator`: the separator for the different levels.
+
+For more information on wildcards, see [this explanation](#wildcards) or
+[Qlobber](https://github.com/davedoesdev/qlobber).
 
 -------------------------------------------------------
 <a name="emit"></a>
 ### emitter.emit(message, callback())
 
 Emit the given message, which must have a `topic` property, which can contain wildcards
-as defined by [QLobber](https://github.com/davedoesdev/qlobber).
+as defined on creation.
 
 -------------------------------------------------------
 <a name="on"></a>
 ### emitter.on(topic, callback(message, done))
 
 Add the given callback to the passed topic. Topic can contain wildcards,
-as defined by [QLobber](https://github.com/davedoesdev/qlobber).
+as defined on creation.
 The `callback`, accept two parameters, the passed message and a `done`
 callback.
 
@@ -80,6 +87,62 @@ __`err`__ object.
 ### emitter.removeListener(topic, callback)
 
 The inverse of `on`.
+
+<a name="wildcards"></a>
+## Wildcards
+
+__MQEmitter__ supports the use of wildcards: every topic is splitted
+according to `separator` (default `/`).
+
+The wildcard character `+` matches exactly one word:
+
+```javascript
+var mq = require('mqemitter')
+  , emitter = mq()
+
+emitter.on('hello/+/world', function(message, cb) {
+  // this will print { topic: 'hello/my/world', 'something': 'more' }
+  console.log(message)
+  cb()
+})
+
+emitter.on('hello/+', function(message, cb) {
+  // this will not be called
+  console.log(message)
+  cb()
+})
+
+emitter.emit({ topic: 'hello/my/world', something: 'more' })
+```
+
+The wildcard character `#` matches zero or more words:
+
+```javascript
+var mq = require('mqemitter')
+  , emitter = mq()
+
+emitter.on('hello/#', function(message, cb) {
+  // this will print { topic: 'hello/my/world', 'something': 'more' }
+  console.log(message)
+  cb()
+})
+
+emitter.on('#', function(message, cb) {
+  // this will print { topic: 'hello/my/world', 'something': 'more' }
+  console.log(message)
+  cb()
+})
+
+emitter.on('hello/my/world/#', function(message, cb) {
+  // this will print { topic: 'hello/my/world', 'something': 'more' }
+  console.log(message)
+  cb()
+})
+
+emitter.emit({ topic: 'hello/my/world', something: 'more' })
+```
+
+Of course, you can mix `#` and `+` in the same subscription.
 
 ## LICENSE
 

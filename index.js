@@ -27,13 +27,21 @@ function MQEmitter(opts) {
 
   opts = opts || {}
 
+  opts.wildcardOne = opts.wildcardOne || '+'
+  opts.wildcardSome = opts.wildcardSome || '#'
+  opts.separator = opts.separator || '/'
+
   this._messageQueue = []
   this._messageCallbacks = []
 
   this.concurrency = opts.concurrency
 
   this.current = 0
-  this._matcher = new Qlobber()
+  this._matcher = new Qlobber({
+      separator: opts.separator
+    , wildcard_one: opts.wildcardOne
+    , wildcard_some: opts.wildcardSome
+  })
 }
 
 Object.defineProperty(MQEmitter.prototype, "length", {
