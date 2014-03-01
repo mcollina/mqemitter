@@ -67,7 +67,7 @@ test('support wildcards', function(t) {
 })
 
 test('queue concurrency', function(t) {
-  t.plan(3)
+  t.plan(4)
 
   var e = mq({ concurrency: 1 })
     , expected = {
@@ -92,35 +92,12 @@ test('queue concurrency', function(t) {
   e.emit({ topic: 'hello 1' }, function() {
     intermediate = Date.now()
     t.ok(intermediate - start >= 5, 'min 5 ms between start and intermediate')
+    t.equal(e.length, 1)
   })
 
   e.emit({ topic: 'hello 2' }, function() {
     finish = Date.now()
     t.ok(finish - intermediate < 5, 'max 5 ms between intermediate and finish')
-    t.end()
-  })
-})
-
-test('queue maxlength', function(t) {
-  t.plan(2)
-
-  var e = mq({ maxlength: 1 })
-    , expected = {
-          topic: 'hello world'
-        , payload: { my: 'message' }
-      }
-
-  e.on('hello 1', function(message, cb) {
-    // fakely do not callback
-  })
-
-  start = Date.now()
-  e.emit({ topic: 'hello 1' }, function() {})
-  e.emit({ topic: 'hello 2' }, function() {})
-
-  e.emit({ topic: 'hello 3' }, function(err) {
-    t.ok(err, 'should return an error object')
-    t.equal(err.message, 'Max queue length reached')
     t.end()
   })
 })

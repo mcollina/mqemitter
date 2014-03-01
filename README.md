@@ -1,8 +1,6 @@
 mqemitter&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mqemitter.png)](https://travis-ci.org/mcollina/mqemitter)
 =================================================================
 
-
-
 An Opinionated Message Queue with an emitter-style API
 
   * <a href="#install">Installation</a>
@@ -23,7 +21,7 @@ $ npm install mqemitter --save
 
 ```js
 var mq = require('mqemitter')
-  , emitter = mq({ concurrency: 5, maxlength: 42 })
+  , emitter = mq({ concurrency: 5 })
   , message
 
 emitter.on('hello world', function(message, cb) {
@@ -34,8 +32,8 @@ emitter.on('hello world', function(message, cb) {
 
 // topic is mandatory
 message = { topic: 'hello world', payload: 'or any other fields' }
-emitter.emit(message, function(err) {
-  // we can have an err if we enqueued too many messages
+emitter.emit(message, function() {
+  // emitter will never return an error
 })
 ```
 
@@ -57,18 +55,13 @@ An MQEmitter accepts the following options:
 
 - `concurrency`: the maximum number of concurrent messages that can be
   on concurrent delivery.
-- `maxlength`: the maximum number of messages that can be enqueued if
-  there is it has reached maximum concurrency.
 
 -------------------------------------------------------
 <a name="emit"></a>
-### emitter.emit(message, callback(err))
+### emitter.emit(message, callback())
 
 Emit the given message, which must have a `topic` property, which can contain wildcards
 as defined by [QLobber](https://github.com/davedoesdev/qlobber).
-The `callback`, accept only one parameter, the possible `Error` object.
-This situation might happen if the message cannot be enqueued, i.e.
-`maxlength` has been reached.
 
 -------------------------------------------------------
 <a name="on"></a>
