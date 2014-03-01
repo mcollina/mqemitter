@@ -89,7 +89,6 @@ MQEmitter.prototype._next = function next(receiver) {
 
 MQEmitter.prototype._do = function(message, callback, receiver) {
   var matches = this._matcher.match(message.topic)
-    , match
     , i
 
   if (matches.length === 0) {
@@ -101,8 +100,7 @@ MQEmitter.prototype._do = function(message, callback, receiver) {
   receiver.callback = callback
 
   for (i = 0; i < matches.length; i++) {
-    match = matches[i]
-    match(message, receiver.counter);
+    matches[i].call(this, message, receiver.counter);
   }
 
   return this

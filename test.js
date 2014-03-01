@@ -3,7 +3,7 @@ var test = require('tap').test
   , mq = require('./')
 
 test('support on and emit', function(t) {
-  t.plan(2)
+  t.plan(3)
 
   var e = mq()
     , expected = {
@@ -14,6 +14,7 @@ test('support on and emit', function(t) {
   e.on('hello world', function(message, cb) {
     t.equal(e.current, 1, 'number of current messages')
     t.equal(message, expected)
+    t.equal(this, e)
     cb()
   })
 
