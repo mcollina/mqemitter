@@ -194,3 +194,16 @@ test('without any listeners', function(t) {
   t.equal(e.current, 0, 'reset the current messages trackers')
   t.end()
 })
+
+test('without any listeners and a callback', function(t) {
+  var e = mq()
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+
+  e.emit(expected, function() {
+    t.equal(e.current, 1, 'there 1 message that is being processed')
+    t.end()
+  })
+})

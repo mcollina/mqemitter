@@ -18,6 +18,7 @@
 
 var Qlobber = require('qlobber').Qlobber
   , assert = require('assert')
+  , nop = function() {}
 
 function MQEmitter(opts) {
   if (!(this instanceof MQEmitter)) {
@@ -53,6 +54,8 @@ MQEmitter.prototype.removeListener = function removeListener(topic, notify) {
 
 MQEmitter.prototype.emit = function emit(message, cb) {
   assert(message)
+
+  cb = cb || nop
 
   if (this.concurrency > 0 && this.current >= this.concurrency) {
 
@@ -90,6 +93,7 @@ MQEmitter.prototype._do = function(message, callback, receiver) {
     , i
 
   if (matches.length === 0) {
+    callback()
     return this._next(receiver)
   }
 
@@ -120,9 +124,7 @@ function CallbackReceiver(mq) {
     that.num--;
 
     if (that.num === 0) {
-      if (that.callback) {
-        that.callback()
-      }
+      that.callback()
       mq._next(that)
     }
   }
