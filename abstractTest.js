@@ -221,6 +221,18 @@ function buildTests(opts) {
 
     check = true
   })
+
+  test('emit after close errors', function(t) {
+    t.plan(1)
+
+    var e = builder()
+
+    e.close(function() {
+      e.emit({ topic: 'hello' }, function(err) {
+        t.ok(err, 'must return an error')
+      })
+    })
+  })
 }
 
 module.exports = buildTests

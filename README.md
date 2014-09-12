@@ -44,6 +44,8 @@ emitter.emit(message, function() {
   * <a href="#emit"><code>emitter#<b>emit()</b></code></a>
   * <a href="#on"><code>emitter#<b>on()</b></code></a>
   * <a href="#removeListener"><code>emitter#<b>removeListener()</b></code></a>
+  * <a href="#close"><code>emitter#<b>close()</b></code></a>
+  * <a href="#closed"><code>emitter#<b>closed</b></code></a>
 
 -------------------------------------------------------
 <a name="mq"></a>
@@ -87,6 +89,12 @@ __`err`__ object.
 ### emitter.removeListener(topic, callback)
 
 The inverse of `on`.
+
+-------------------------------------------------------
+<a name="close"></a>
+### emitter.close(callback())
+
+Close the given emitter. After, all writes will return an error.
 
 <a name="wildcards"></a>
 ## Wildcards
