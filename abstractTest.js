@@ -205,6 +205,22 @@ function buildTests(opts) {
       t.end()
     })
   })
+
+  test('close support', function(t) {
+    t.plan(3)
+
+    var e     = builder()
+      , check = false
+
+    t.notOk(e.closed, 'must have a false closed property')
+
+    e.close(function() {
+      t.ok(check, 'must delay the close callback')
+      t.ok(e.closed, 'must have a true closed property')
+    })
+
+    check = true
+  })
 }
 
 module.exports = buildTests

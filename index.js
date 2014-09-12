@@ -42,6 +42,8 @@ function MQEmitter(opts) {
     , wildcard_one: opts.wildcardOne
     , wildcard_some: opts.wildcardSome
   })
+
+  this.closed = false
 }
 
 Object.defineProperty(MQEmitter.prototype, "length", {
@@ -79,6 +81,13 @@ MQEmitter.prototype.emit = function emit(message, cb) {
     this.current++
     this._do(message, cb, new CallbackReceiver(this))
   }
+
+  return this
+}
+
+MQEmitter.prototype.close = function close(cb) {
+  this.closed = true
+  setImmediate(cb)
 
   return this
 }
