@@ -4,9 +4,11 @@
   "description": "An Opinionated Message Queue with an emitter-style API",
   "main": "index.js",
   "scripts": {
-    "test": "tap test.js"
+    "test": "tape test.js | faucet"
   },
-  "pre-commit": ["test"],
+  "pre-commit": [
+    "test"
+  ],
   "website": "https://github.com/mcollina/mqemitter",
   "repository": {
     "type": "git",
@@ -28,8 +30,9 @@
   ],
   "license": "ISC",
   "devDependencies": {
-    "tap": "~0.4.8",
-    "pre-commit": "0.0.4"
+    "faucet": "0.0.1",
+    "pre-commit": "0.0.9",
+    "tape": "^2.14.0"
   },
   "dependencies": {
     "qlobber": "~0.3.8"

@@ -1,5 +1,5 @@
 
-var test = require('tap').test
+var test = require('tape').test
   , mq = require('./')
 
 test('support on and emit', function(t) {
@@ -62,7 +62,7 @@ test('queue concurrency', function(t) {
   t.equal(e.concurrency, 1)
 
   e.on('hello 1', function(message, cb) {
-    setTimeout(cb, 5)
+    setTimeout(cb, 50)
   })
 
   e.on('hello 2', function(message, cb) {
@@ -72,7 +72,7 @@ test('queue concurrency', function(t) {
   start = Date.now()
   e.emit({ topic: 'hello 1' }, function() {
     intermediate = Date.now()
-    t.ok(intermediate - start >= 5, 'min 5 ms between start and intermediate')
+    t.ok(intermediate - start >= 25, 'min 25 ms between start and intermediate')
     t.equal(e.length, 1)
   })
 
