@@ -37,3 +37,18 @@ test('queue concurrency', function(t) {
     t.ok(completed1, 'the first message must be completed')
   })
 })
+
+test('without any listeners and a callback', function(t) {
+  var e = mq()
+    , expected = {
+          topic: 'hello world'
+        , payload: { my: 'message' }
+      }
+
+  e.emit(expected, function() {
+    t.equal(e.current, 1, 'there 1 message that is being processed')
+    e.close(function() {
+      t.end()
+    })
+  })
+})

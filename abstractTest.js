@@ -4,6 +4,8 @@ function buildTests(opts) {
     , test    = opts.test
 
   test('support on and emit', function(t) {
+    t.plan(4)
+
     var e = builder()
       , expected = {
             topic: 'hello world'
@@ -12,19 +14,21 @@ function buildTests(opts) {
 
     e.on('hello world', function(message, cb) {
       t.equal(e.current, 1, 'number of current messages')
-      t.equal(message, expected)
+      t.deepEqual(message, expected)
       t.equal(this, e)
       cb()
     })
 
     e.emit(expected, function() {
       e.close(function() {
-        t.end()
+        t.pass('closed')
       })
     })
   })
 
   test('support multiple subscribers', function(t) {
+    t.plan(3)
+
     var e = builder()
       , expected = {
             topic: 'hello world'
@@ -32,36 +36,68 @@ function buildTests(opts) {
         }
 
     e.on('hello world', function(message, cb) {
-      t.ok(true)
+      t.ok(message, 'message received')
       cb()
     })
 
     e.on('hello world', function(message, cb) {
-      t.ok(true)
+      t.ok(message, 'message received')
       cb()
     })
 
     e.emit(expected, function() {
       e.close(function() {
-        t.end()
+        t.pass('closed')
       })
     })
   })
 
-  test('removeListener', function(t) {
+  test('support multiple subscribers and unsubscribers', function(t) {
+    t.plan(2)
+
     var e = builder()
       , expected = {
             topic: 'hello world'
           , payload: { my: 'message' }
         }
+
+    function first(message, cb) {
+      t.fail('first listener should not receive any events')
+      cb()
+    }
+
+    function second(message, cb) {
+      t.ok(message, 'second listener must receive the message')
+      cb()
+      e.close(function() {
+        t.pass('closed')
+      })
+    }
+
+    e.on('hello world', first)
+    e.on('hello world', second)
+    e.removeListener('hello world', first)
+
+    e.emit(expected)
+  })
+
+  test('removeListener', function(t) {
+    t.plan(1)
+
+    var e = builder()
+      , expected = {
+            topic: 'hello world'
+          , payload: { my: 'message' }
+        }
+      , toRemoveCalled = false
 
     e.on('hello world', function(message, cb) {
       cb()
     })
 
     function toRemove(message, cb) {
-      t.ok(false, 'the toRemove function must not be called')
-      t.end()
+      toRemoveCalled = true
+      cb()
     }
 
     e.on('hello world', toRemove)
@@ -70,12 +106,14 @@ function buildTests(opts) {
 
     e.emit(expected, function() {
       e.close(function() {
-        t.end()
+        t.notOk(toRemoveCalled, 'the toRemove function must not be called')
       })
     })
   })
 
   test('without a callback on emit', function(t) {
+    t.plan(1)
+
     var e = builder()
       , expected = {
             topic: 'hello world'
@@ -84,13 +122,17 @@ function buildTests(opts) {
 
     e.on('hello world', function(message, cb) {
       cb()
-      t.end()
+      e.close(function() {
+        t.pass('closed')
+      })
     })
 
     e.emit(expected)
   })
 
   test('without any listeners', function(t) {
+    t.plan(2)
+
     var e = builder()
       , expected = {
             topic: 'hello world'
@@ -100,26 +142,13 @@ function buildTests(opts) {
     e.emit(expected)
     t.equal(e.current, 0, 'reset the current messages trackers')
     e.close(function() {
-      t.end()
-    })
-  })
-
-  test('without any listeners and a callback', function(t) {
-    var e = builder()
-      , expected = {
-            topic: 'hello world'
-          , payload: { my: 'message' }
-        }
-
-    e.emit(expected, function() {
-      t.equal(e.current, 1, 'there 1 message that is being processed')
-      e.close(function() {
-        t.end()
-      })
+      t.pass('closed')
     })
   })
 
   test('support one level wildcard', function(t) {
+    t.plan(2)
+
     var e = builder()
       , expected = {
             topic: 'hello/world'
@@ -135,14 +164,16 @@ function buildTests(opts) {
     e.emit({ topic: 'hello/my/world' })
 
     // this will be catched
-    e.emit(expected)
-
-    e.close(function() {
-      t.end()
+    e.emit(expected, function() {
+      e.close(function() {
+        t.pass('closed')
+      })
     })
   })
 
   test('support changing one level wildcard', function(t) {
+    t.plan(2)
+
     var e = builder({ wildcardOne: '~' })
       , expected = {
             topic: 'hello/world'
@@ -156,12 +187,14 @@ function buildTests(opts) {
 
     e.emit(expected, function() {
       e.close(function() {
-        t.end()
+        t.pass('closed')
       })
     })
   })
 
   test('support deep wildcard', function(t) {
+    t.plan(2)
+
     var e = builder()
       , expected = {
             topic: 'hello/my/world'
@@ -173,14 +206,16 @@ function buildTests(opts) {
       cb()
     })
 
-    e.emit(expected)
-
-    e.close(function() {
-      t.end()
+    e.emit(expected, function() {
+      e.close(function() {
+        t.pass('closed')
+      })
     })
   })
 
   test('support changing deep wildcard', function(t) {
+    t.plan(2)
+
     var e = builder({ wildcardSome: '*' })
       , expected = {
             topic: 'hello/my/world'
@@ -192,14 +227,16 @@ function buildTests(opts) {
       cb()
     })
 
-    e.emit(expected)
-
-    e.close(function() {
-      t.end()
+    e.emit(expected, function() {
+      e.close(function() {
+        t.pass('closed')
+      })
     })
   })
 
   test('support changing the level separator', function(t) {
+    t.plan(2)
+
     var e = builder({ separator: '~' })
       , expected = {
             topic: 'hello~world'
@@ -213,7 +250,7 @@ function buildTests(opts) {
 
     e.emit(expected, function() {
       e.close(function() {
-        t.end()
+        t.pass('closed')
       })
     })
   })
@@ -243,6 +280,63 @@ function buildTests(opts) {
       })
     })
   })
+
+  test('support multiple subscribers with wildcards', function(t) {
+    var e = builder()
+      , expected = {
+            topic: 'hello/world'
+          , payload: { my: 'message' }
+        }
+      , firstCalled = false
+      , secondCalled = false
+
+    e.on('hello/#', function(message, cb) {
+      t.notOk(firstCalled, 'first subscriber must only be called once')
+      firstCalled = true
+      cb()
+    })
+
+    e.on('hello/+', function(message, cb) {
+      t.notOk(secondCalled, 'second subscriber must only be called once')
+      secondCalled = true
+      cb()
+    })
+
+    e.emit(expected, function() {
+      e.close(function() {
+        t.end()
+      })
+    })
+  })
+
+  test('support multiple subscribers with wildcards (deep)', function(t) {
+    var e = builder()
+      , expected = {
+            topic: 'hello/my/world'
+          , payload: { my: 'message' }
+        }
+      , firstCalled = false
+      , secondCalled = false
+
+    e.on('hello/#', function(message, cb) {
+      t.notOk(firstCalled, 'first subscriber must only be called once')
+      firstCalled = true
+      cb()
+    })
+
+    e.on('hello/+/world', function(message, cb) {
+      t.notOk(secondCalled, 'second subscriber must only be called once')
+      secondCalled = true
+      cb()
+    })
+
+    e.emit(expected, function() {
+      e.close(function() {
+        t.end()
+      })
+    })
+  })
+
 }
 
 module.exports = buildTests
