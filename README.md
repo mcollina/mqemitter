@@ -10,6 +10,9 @@ callbacks.
   * <a href="#wildcards">Wildcards</a>
   * <a href="#licence">Licence &amp; copyright</a>
 
+Do you need a multi process MQEmitter? Check out
+[mqemitter-redis](http://github.com/mqemitter-redis).
+
 <a name="install"></a>
 ## Installation
 
