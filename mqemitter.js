@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-"use strict";
+'use strict';
 
 var Qlobber = require('qlobber').Qlobber
   , assert = require('assert')
@@ -33,6 +33,7 @@ function MQEmitter(opts) {
 
   this._messageQueue = []
   this._messageCallbacks = []
+  this._latestReceiver = new CallbackReceiver(this)
 
   this.concurrency = opts.concurrency
 
@@ -77,12 +78,23 @@ MQEmitter.prototype.emit = function emit(message, cb) {
 
   cb = cb || nop
 
+  var receiver = null;
+
   if (this.concurrency > 0 && this.current >= this.concurrency) {
     this._messageQueue.push(message)
     this._messageCallbacks.push(cb)
   } else {
     this.current++
-    this._do(message, cb, new CallbackReceiver(this))
+    receiver = this._latestReceiver
+
+    if (this._latestReceiver) {
+      receiver = this._latestReceiver
+      this._latestReceiver = null
+    } else {
+      receiver = new CallbackReceiver(this);
+    }
+
+    this._do(message, cb, receiver)
   }
 
   return this
@@ -102,6 +114,7 @@ MQEmitter.prototype._next = function next(receiver) {
   if (!message) {
     // we are at the end of the queue
     this.current--
+    this._latestReceiver = receiver
   } else {
     this._do(message, callback, receiver)
   }
@@ -140,6 +153,7 @@ function CallbackReceiver(mq) {
 
     if (that.num === 0) {
       that.callback()
+      that.callback = nop
       mq._next(that)
     }
   }
