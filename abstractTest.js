@@ -17,11 +17,11 @@ function buildTests(opts) {
       t.deepEqual(message, expected)
       t.equal(this, e)
       cb()
-    })
-
-    e.emit(expected, function() {
-      e.close(function() {
-        t.pass('closed')
+    }, function() {
+      e.emit(expected, function() {
+        e.close(function() {
+          t.pass('closed')
+        })
       })
     })
   })
@@ -38,16 +38,16 @@ function buildTests(opts) {
     e.on('hello world', function(message, cb) {
       t.ok(message, 'message received')
       cb()
-    })
-
-    e.on('hello world', function(message, cb) {
-      t.ok(message, 'message received')
-      cb()
-    })
-
-    e.emit(expected, function() {
-      e.close(function() {
-        t.pass('closed')
+    }, function() {
+      e.on('hello world', function(message, cb) {
+        t.ok(message, 'message received')
+        cb()
+      }, function() {
+        e.emit(expected, function() {
+          e.close(function() {
+            t.pass('closed')
+          })
+        })
       })
     })
   })
@@ -74,11 +74,13 @@ function buildTests(opts) {
       })
     }
 
-    e.on('hello world', first)
-    e.on('hello world', second)
-    e.removeListener('hello world', first)
-
-    e.emit(expected)
+    e.on('hello world', first, function() {
+      e.on('hello world', second, function() {
+        e.removeListener('hello world', first, function() {
+          e.emit(expected)
+        })
+      })
+    })
   })
 
   test('removeListener', function(t) {
@@ -91,27 +93,28 @@ function buildTests(opts) {
         }
       , toRemoveCalled = false
 
-    e.on('hello world', function(message, cb) {
-      cb()
-    })
 
     function toRemove(message, cb) {
       toRemoveCalled = true
       cb()
     }
 
-    e.on('hello world', toRemove)
-
-    e.removeListener('hello world', toRemove)
-
-    e.emit(expected, function() {
-      e.close(function() {
-        t.notOk(toRemoveCalled, 'the toRemove function must not be called')
+    e.on('hello world', function(message, cb) {
+      cb()
+    }, function() {
+      e.on('hello world', toRemove, function() {
+        e.removeListener('hello world', toRemove, function() {
+          e.emit(expected, function() {
+            e.close(function() {
+              t.notOk(toRemoveCalled, 'the toRemove function must not be called')
+            })
+          })
+        })
       })
     })
   })
 
-  test('without a callback on emit', function(t) {
+  test('without a callback on emit and on', function(t) {
     t.plan(1)
 
     var e = builder()
@@ -158,15 +161,15 @@ function buildTests(opts) {
     e.on('hello/+', function(message, cb) {
       t.equal(message.topic, 'hello/world')
       cb()
-    })
+    }, function() {
+      // this will not be catched
+      e.emit({ topic: 'hello/my/world' })
 
-    // this will not be catched
-    e.emit({ topic: 'hello/my/world' })
-
-    // this will be catched
-    e.emit(expected, function() {
-      e.close(function() {
-        t.pass('closed')
+      // this will be catched
+      e.emit(expected, function() {
+        e.close(function() {
+          t.pass('closed')
+        })
       })
     })
   })
@@ -183,11 +186,11 @@ function buildTests(opts) {
     e.on('hello/~', function(message, cb) {
       t.equal(message.topic, 'hello/world')
       cb()
-    })
-
-    e.emit(expected, function() {
-      e.close(function() {
-        t.pass('closed')
+    }, function() {
+      e.emit(expected, function() {
+        e.close(function() {
+          t.pass('closed')
+        })
       })
     })
   })
@@ -204,11 +207,11 @@ function buildTests(opts) {
     e.on('hello/#', function(message, cb) {
       t.equal(message.topic, 'hello/my/world')
       cb()
-    })
-
-    e.emit(expected, function() {
-      e.close(function() {
-        t.pass('closed')
+    }, function() {
+      e.emit(expected, function() {
+        e.close(function() {
+          t.pass('closed')
+        })
       })
     })
   })
@@ -225,11 +228,11 @@ function buildTests(opts) {
     e.on('hello/*', function(message, cb) {
       t.equal(message.topic, 'hello/my/world')
       cb()
-    })
-
-    e.emit(expected, function() {
-      e.close(function() {
-        t.pass('closed')
+    }, function() {
+      e.emit(expected, function() {
+        e.close(function() {
+          t.pass('closed')
+        })
       })
     })
   })
@@ -246,11 +249,11 @@ function buildTests(opts) {
     e.on('hello~+', function(message, cb) {
       t.equal(message.topic, 'hello~world')
       cb()
-    })
-
-    e.emit(expected, function() {
-      e.close(function() {
-        t.pass('closed')
+    }, function() {
+      e.emit(expected, function() {
+        e.close(function() {
+          t.pass('closed')
+        })
       })
     })
   })
@@ -300,11 +303,11 @@ function buildTests(opts) {
       t.notOk(secondCalled, 'second subscriber must only be called once')
       secondCalled = true
       cb()
-    })
-
-    e.emit(expected, function() {
-      e.close(function() {
-        t.end()
+    }, function() {
+      e.emit(expected, function() {
+        e.close(function() {
+          t.end()
+        })
       })
     })
   })
@@ -328,15 +331,14 @@ function buildTests(opts) {
       t.notOk(secondCalled, 'second subscriber must only be called once')
       secondCalled = true
       cb()
-    })
-
-    e.emit(expected, function() {
-      e.close(function() {
-        t.end()
+    }, function() {
+      e.emit(expected, function() {
+        e.close(function() {
+          t.end()
+        })
       })
     })
   })
-
 }
 
 module.exports = buildTests

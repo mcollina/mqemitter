@@ -54,18 +54,26 @@ Object.defineProperty(MQEmitter.prototype, "length", {
   enumerable: true
 });
 
-MQEmitter.prototype.on = function on(topic, notify) {
+MQEmitter.prototype.on = function on(topic, notify, done) {
   assert(topic)
   assert(notify)
   this._matcher.add(topic, notify)
 
+  if (done) {
+    setImmediate(done)
+  }
+
   return this
 }
 
-MQEmitter.prototype.removeListener = function removeListener(topic, notify) {
+MQEmitter.prototype.removeListener = function removeListener(topic, notify, done) {
   assert(topic)
   assert(notify)
   this._matcher.remove(topic, notify)
+
+  if (done) {
+    setImmediate(done)
+  }
 
   return this
 }

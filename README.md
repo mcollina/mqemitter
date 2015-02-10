@@ -77,7 +77,7 @@ as defined on creation.
 
 -------------------------------------------------------
 <a name="on"></a>
-### emitter.on(topic, callback(message, done))
+### emitter.on(topic, callback(message, done), [onDone(err)])
 
 Add the given callback to the passed topic. Topic can contain wildcards,
 as defined on creation.
@@ -87,9 +87,11 @@ callback.
 The callback __must never error__ and `done` must not be called with an
 __`err`__ object.
 
+`onDone` will be called when the event subscribe is done correctly.
+
 -------------------------------------------------------
 <a name="removeListener"></a>
-### emitter.removeListener(topic, callback)
+### emitter.removeListener(topic, callback(message, done), [removeDone(err)])
 
 The inverse of `on`.
 
