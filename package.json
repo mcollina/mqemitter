@@ -35,6 +35,6 @@
     "tape": "^2.14.0"
   },
   "dependencies": {
-    "qlobber": "~0.3.8"
+    "qlobber": "~0.5.0"
   }
 }
