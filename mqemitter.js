@@ -18,12 +18,15 @@
 
 var Qlobber = require('qlobber').Qlobber
   , assert = require('assert')
+  , fastparallel = require('fastparallel')
   , nop = function() {}
 
 function MQEmitter(opts) {
   if (!(this instanceof MQEmitter)) {
     return new MQEmitter(opts)
   }
+
+  var that = this
 
   opts = opts || {}
 
@@ -33,7 +36,10 @@ function MQEmitter(opts) {
 
   this._messageQueue = []
   this._messageCallbacks = []
-  this._latestReceiver = new CallbackReceiver(this)
+  this._parallel = fastparallel({
+      results: false
+    , released: released
+  })
 
   this.concurrency = opts.concurrency
 
@@ -45,6 +51,19 @@ function MQEmitter(opts) {
   })
 
   this.closed = false
+  this._released = released
+
+  function released() {
+    var message = that._messageQueue.shift()
+      , callback = that._messageCallbacks.shift()
+
+    if (!message) {
+      // we are at the end of the queue
+      that.current--
+    } else {
+      that._do(message, callback)
+    }
+  }
 }
 
 Object.defineProperty(MQEmitter.prototype, "length", {
@@ -93,16 +112,7 @@ MQEmitter.prototype.emit = function emit(message, cb) {
     this._messageCallbacks.push(cb)
   } else {
     this.current++
-    receiver = this._latestReceiver
-
-    if (this._latestReceiver) {
-      receiver = this._latestReceiver
-      this._latestReceiver = null
-    } else {
-      receiver = new CallbackReceiver(this);
-    }
-
-    this._do(message, cb, receiver)
+    this._do(message, cb)
   }
 
   return this
@@ -115,56 +125,17 @@ MQEmitter.prototype.close = function close(cb) {
   return this
 }
 
-MQEmitter.prototype._next = function next(receiver) {
-  var message = this._messageQueue.shift()
-    , callback = this._messageCallbacks.shift()
-
-  if (!message) {
-    // we are at the end of the queue
-    this.current--
-    this._latestReceiver = receiver
-  } else {
-    this._do(message, callback, receiver)
-  }
-
-  return this
-}
-
-MQEmitter.prototype._do = function(message, callback, receiver) {
+MQEmitter.prototype._do = function(message, callback) {
   var matches = this._matcher.match(message.topic)
-    , i
 
   if (matches.length === 0) {
     callback()
-    return this._next(receiver)
-  }
-
-  receiver.num = matches.length
-  receiver.callback = callback
-
-  for (i = 0; i < matches.length; i++) {
-    matches[i].call(this, message, receiver.counter);
+    this._released()
+  } else {
+    this._parallel(this, matches, message, callback)
   }
 
   return this
-}
-
-function CallbackReceiver(mq) {
-  // these will be initialized by the caller
-  this.num = -1
-  this.callback = null
-
-  var that = this
-
-  this.counter = function() {
-    that.num--;
-
-    if (that.num === 0) {
-      that.callback()
-      that.callback = nop
-      mq._next(that)
-    }
-  }
 }
 
 module.exports = MQEmitter
