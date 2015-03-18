@@ -11,7 +11,10 @@ callbacks.
   * <a href="#licence">Licence &amp; copyright</a>
 
 Do you need a multi process MQEmitter? Check out
-[mqemitter-redis](http://github.com/mqemitter-redis).
+[mqemitter-redis](http://npm.im/mqemitter-redis) or
+[mqemitter-mongodb](http://npm.im/mqemitter-mongodb).
+
+[![js-standard-style](https://raw.githubusercontent.com/feross/standard/master/badge.png)](https://github.com/feross/standard)
 
 <a name="install"></a>
 ## Installation
@@ -25,10 +28,10 @@ $ npm install mqemitter --save
 
 ```js
 var mq = require('mqemitter')
-  , emitter = mq({ concurrency: 5 })
-  , message
+var emitter = mq({ concurrency: 5 })
+var message
 
-emitter.on('hello world', function(message, cb) {
+emitter.on('hello world', function (message, cb) {
   // call callback when you are done
   // do not pass any errors, the emitter cannot handle it.
   cb()
@@ -36,7 +39,7 @@ emitter.on('hello world', function(message, cb) {
 
 // topic is mandatory
 message = { topic: 'hello world', payload: 'or any other fields' }
-emitter.emit(message, function() {
+emitter.emit(message, function () {
   // emitter will never return an error
 })
 ```
@@ -159,7 +162,7 @@ Of course, you can mix `#` and `+` in the same subscription.
 
 ## LICENSE
 
-Copyright (c) 2014, Matteo Collina <hello@matteocollina.com>
+Copyright (c) 2014-2015, Matteo Collina <hello@matteocollina.com>
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above

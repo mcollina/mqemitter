@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, Matteo Collina <hello@matteocollina.com>
+ * Copyright (c) 2014-2015, Matteo Collina <hello@matteocollina.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -13,15 +13,13 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
-
-'use strict';
+'use strict'
 
 var Qlobber = require('qlobber').Qlobber
-  , assert = require('assert')
-  , fastparallel = require('fastparallel')
-  , nop = function() {}
+var assert = require('assert')
+var fastparallel = require('fastparallel')
 
-function MQEmitter(opts) {
+function MQEmitter (opts) {
   if (!(this instanceof MQEmitter)) {
     return new MQEmitter(opts)
   }
@@ -37,25 +35,25 @@ function MQEmitter(opts) {
   this._messageQueue = []
   this._messageCallbacks = []
   this._parallel = fastparallel({
-      results: false
-    , released: released
+    results: false,
+    released: released
   })
 
   this.concurrency = opts.concurrency
 
   this.current = 0
   this._matcher = new Qlobber({
-      separator: opts.separator
-    , wildcard_one: opts.wildcardOne
-    , wildcard_some: opts.wildcardSome
+    separator: opts.separator,
+    wildcard_one: opts.wildcardOne,
+    wildcard_some: opts.wildcardSome
   })
 
   this.closed = false
   this._released = released
 
-  function released() {
+  function released () {
     var message = that._messageQueue.shift()
-      , callback = that._messageCallbacks.shift()
+    var callback = that._messageCallbacks.shift()
 
     if (!message) {
       // we are at the end of the queue
@@ -66,14 +64,14 @@ function MQEmitter(opts) {
   }
 }
 
-Object.defineProperty(MQEmitter.prototype, "length", {
-  get: function() {
-    return this._messageQueue.length;
+Object.defineProperty(MQEmitter.prototype, 'length', {
+  get: function () {
+    return this._messageQueue.length
   },
   enumerable: true
-});
+})
 
-MQEmitter.prototype.on = function on(topic, notify, done) {
+MQEmitter.prototype.on = function on (topic, notify, done) {
   assert(topic)
   assert(notify)
   this._matcher.add(topic, notify)
@@ -85,7 +83,7 @@ MQEmitter.prototype.on = function on(topic, notify, done) {
   return this
 }
 
-MQEmitter.prototype.removeListener = function removeListener(topic, notify, done) {
+MQEmitter.prototype.removeListener = function removeListener (topic, notify, done) {
   assert(topic)
   assert(notify)
   this._matcher.remove(topic, notify)
@@ -97,15 +95,14 @@ MQEmitter.prototype.removeListener = function removeListener(topic, notify, done
   return this
 }
 
-MQEmitter.prototype.emit = function emit(message, cb) {
+MQEmitter.prototype.emit = function emit (message, cb) {
   assert(message)
 
-  if (this.closed)
+  if (this.closed) {
     return cb(new Error('mqemitter is closed'))
+  }
 
   cb = cb || nop
-
-  var receiver = null;
 
   if (this.concurrency > 0 && this.current >= this.concurrency) {
     this._messageQueue.push(message)
@@ -118,14 +115,14 @@ MQEmitter.prototype.emit = function emit(message, cb) {
   return this
 }
 
-MQEmitter.prototype.close = function close(cb) {
+MQEmitter.prototype.close = function close (cb) {
   this.closed = true
   setImmediate(cb)
 
   return this
 }
 
-MQEmitter.prototype._do = function(message, callback) {
+MQEmitter.prototype._do = function (message, callback) {
   var matches = this._matcher.match(message.topic)
 
   if (matches.length === 0) {
@@ -137,5 +134,7 @@ MQEmitter.prototype._do = function(message, callback) {
 
   return this
 }
+
+function nop () {}
 
 module.exports = MQEmitter
