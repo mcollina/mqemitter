@@ -1,6 +1,6 @@
 {
   "name": "mqemitter",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "An Opinionated Message Queue with an emitter-style API",
   "main": "mqemitter.js",
   "scripts": {
@@ -33,9 +33,9 @@
   "license": "ISC",
   "devDependencies": {
     "faucet": "0.0.1",
-    "pre-commit": "0.0.9",
-    "standard": "^3.1.0",
-    "tape": "^2.14.0"
+    "pre-commit": "1.0.7",
+    "standard": "^4.0.1",
+    "tape": "^4.0.0"
   },
   "dependencies": {
     "fastparallel": "^1.1.1",
