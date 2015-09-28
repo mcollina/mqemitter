@@ -33,12 +33,12 @@
   "license": "ISC",
   "devDependencies": {
     "faucet": "0.0.1",
-    "pre-commit": "1.0.7",
-    "standard": "^4.0.1",
+    "pre-commit": "^1.0.7",
+    "standard": "^5.0.0",
     "tape": "^4.0.0"
   },
   "dependencies": {
-    "fastparallel": "^1.1.1",
+    "fastparallel": "^2.0.0",
     "qlobber": "~0.5.0"
   }
 }
