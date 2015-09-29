@@ -52,13 +52,12 @@ function MQEmitter (opts) {
   this._released = released
 
   function released () {
+    that.current--
+
     var message = that._messageQueue.shift()
     var callback = that._messageCallbacks.shift()
 
-    if (!message) {
-      // we are at the end of the queue
-      that.current--
-    } else {
+    if (message) {
       that._do(message, callback)
     }
   }
@@ -108,7 +107,6 @@ MQEmitter.prototype.emit = function emit (message, cb) {
     this._messageQueue.push(message)
     this._messageCallbacks.push(cb)
   } else {
-    this.current++
     this._do(message, cb)
   }
 
@@ -125,12 +123,8 @@ MQEmitter.prototype.close = function close (cb) {
 MQEmitter.prototype._do = function (message, callback) {
   var matches = this._matcher.match(message.topic)
 
-  if (matches.length === 0) {
-    callback()
-    this._released()
-  } else {
-    this._parallel(this, matches, message, callback)
-  }
+  this.current++
+  this._parallel(this, matches, message, callback)
 
   return this
 }
