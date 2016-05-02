@@ -145,7 +145,9 @@ function buildTests (opts) {
       })
     })
 
-    e.emit(expected)
+    setTimeout(function () {
+      e.emit(expected)
+    }, 100)
   })
 
   test('without any listeners', function (t) {
