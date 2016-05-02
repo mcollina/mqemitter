@@ -5,12 +5,9 @@
   "main": "mqemitter.js",
   "scripts": {
     "lint": "standard",
-    "test": "tape test.js | faucet"
+    "test": "standard && tape test.js | faucet"
   },
-  "pre-commit": [
-    "lint",
-    "test"
-  ],
+  "pre-commit": "test",
   "website": "https://github.com/mcollina/mqemitter",
   "repository": {
     "type": "git",
