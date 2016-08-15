@@ -16,7 +16,7 @@ Do you need a multi process MQEmitter. Check out the table below.
 <tr><th align="left"><a href="https://github.com/mcollina/mqemitter-redis">mqemitter redis</a></th></tr>
 <tr><th align="left"><a href="https://github.com/mcollina/mqemitter-mongodb">mqemitter mongodb</a></th></tr>
 <tr><th align="left"><a href="https://github.com/GavinDmello/mqemitter-aerospike">mqemitter aerospike</a></th></tr>
-</tbody></table>|
+</tbody></table>
 
 [![js-standard-style](https://raw.githubusercontent.com/feross/standard/master/badge.png)](https://github.com/feross/standard)
 
