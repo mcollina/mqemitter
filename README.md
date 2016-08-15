@@ -10,15 +10,17 @@ callbacks.
   * <a href="#wildcards">Wildcards</a>
   * <a href="#licence">Licence &amp; copyright</a>
 
-Do you need a multi process MQEmitter. Check out the table below.
+If you need a multi process MQEmitter, check out the table below:
 
 <table><tbody>
 <tr><th align="left"><a href="https://github.com/mcollina/mqemitter-redis">mqemitter redis</a></th></tr>
 <tr><th align="left"><a href="https://github.com/mcollina/mqemitter-mongodb">mqemitter mongodb</a></th></tr>
+<tr><th align="left"><a href="https://github.com/mcollina/mqemitter-child-process">mqemitter child process</a></th></tr>
+<tr><th align="left"><a href="https://github.com/mcollina/mqemitter-cs">mqemitter client server</a></th></tr>
 <tr><th align="left"><a href="https://github.com/GavinDmello/mqemitter-aerospike">mqemitter aerospike</a></th></tr>
 </tbody></table>
 
-[![js-standard-style](https://raw.githubusercontent.com/feross/standard/master/badge.png)](https://github.com/feross/standard)
+[![js-standard-style](https://raw.githubusercontent.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 <a name="install"></a>
 ## Installation
