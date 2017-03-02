@@ -36,7 +36,7 @@ function MQEmitter (opts) {
   this._messageCallbacks = []
   this._parallel = fastparallel({
     results: false,
-    released: released
+    release: release
   })
 
   this.concurrency = opts.concurrency
@@ -49,9 +49,9 @@ function MQEmitter (opts) {
   })
 
   this.closed = false
-  this._released = released
+  this._release = release
 
-  function released () {
+  function release () {
     that.current--
 
     var message = that._messageQueue.shift()
@@ -106,6 +106,7 @@ MQEmitter.prototype.emit = function emit (message, cb) {
   if (this.concurrency > 0 && this.current >= this.concurrency) {
     this._messageQueue.push(message)
     this._messageCallbacks.push(cb)
+    this._release()
   } else {
     this._do(message, cb)
   }
