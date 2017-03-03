@@ -1,4 +1,4 @@
-mqemitter&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mqemitter.png)](https://travis-ci.org/mcollina/mqemitter)
+mqemitter&nbsp;&nbsp;[![Build Status](https://travis-ci.org/mcollina/mqemitter.svg)](https://travis-ci.org/mcollina/mqemitter)
 =================================================================
 
 An Opinionated Message Queue with an emitter-style API, but with
@@ -20,7 +20,7 @@ If you need a multi process MQEmitter, check out the table below:
 <tr><th align="left"><a href="https://github.com/GavinDmello/mqemitter-aerospike">mqemitter aerospike</a></th></tr>
 </tbody></table>
 
-[![js-standard-style](https://raw.githubusercontent.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+[![JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 <a name="install"></a>
 ## Installation
