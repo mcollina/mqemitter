@@ -24,31 +24,6 @@ abstractTest({
   test: require('tape').test
 })
 
-test('queue concurrency', function (t) {
-  t.plan(2)
-
-  var e = mq({ concurrency: 1 })
-  var completed1 = false
-
-  t.equal(e.concurrency, 1)
-
-  e.on('hello 1', function (message, cb) {
-    setTimeout(cb, 10)
-  })
-
-  e.on('hello 2', function (message, cb) {
-    cb()
-  })
-
-  e.emit({ topic: 'hello 1' }, function () {
-    completed1 = true
-  })
-
-  e.emit({ topic: 'hello 2' }, function () {
-    t.ok(completed1, 'the first message must be completed')
-  })
-})
-
 test('without any listeners and a callback', function (t) {
   var e = mq()
   var expected = {
@@ -61,5 +36,31 @@ test('without any listeners and a callback', function (t) {
     e.close(function () {
       t.end()
     })
+  })
+})
+
+test('queue concurrency and releasing', function (t) {
+  var e = mq({ concurrency: 2 })
+  var sent = 0
+  var received = 0
+  var lastmsg = 0
+
+  t.equal(e.concurrency, 2)
+
+  e.on('overflow', function (message, cb) {
+    t.ok(lastmsg === (message.num - 1), 'messages should arrive in correct order')
+    lastmsg = message.num
+    received++
+  })
+
+  do {
+    sent++
+    e.emit({topic: 'overflow', num: sent}, function () {})
+  }
+  while (sent < 4)
+
+  t.equal(received, sent, 'there should be equal received and sent messages')
+  e.close(function () {
+    t.end()
   })
 })
