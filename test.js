@@ -63,3 +63,31 @@ test('without any listeners and a callback', function (t) {
     })
   })
 })
+
+test('queue concurrency with overlapping subscriptions', function (t) {
+  t.plan(3)
+
+  var e = mq({ concurrency: 1 })
+  var completed1 = false
+
+  t.equal(e.concurrency, 1)
+
+  e.on('#', function (message, cb) {
+    setTimeout(cb, 10)
+  })
+
+  e.on('+', function (message, cb) {
+    setTimeout(cb, 20)
+  })
+
+  e.emit({ topic: 'hello' }, function () {
+    completed1 = true
+  })
+
+  e.emit({ topic: 'hello' }, function () {
+    t.ok(completed1, 'the first message must be completed')
+    process.nextTick(function () {
+      t.equal(e.current, 0, 'no message is in flight')
+    })
+  })
+})
