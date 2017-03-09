@@ -72,19 +72,19 @@ test('queue concurrency with overlapping subscriptions', function (t) {
 
   t.equal(e.concurrency, 1)
 
-  e.on('#', function (message, cb) {
+  e.on('000001/021/#', function (message, cb) {
     setTimeout(cb, 10)
   })
 
-  e.on('+', function (message, cb) {
+  e.on('000001/021/000B/0001/01', function (message, cb) {
     setTimeout(cb, 20)
   })
 
-  e.emit({ topic: 'hello' }, function () {
+  e.emit({ topic: '000001/021/000B/0001/01' }, function () {
     completed1 = true
   })
 
-  e.emit({ topic: 'hello' }, function () {
+  e.emit({ topic: '000001/021/000B/0001/01' }, function () {
     t.ok(completed1, 'the first message must be completed')
     process.nextTick(function () {
       t.equal(e.current, 0, 'no message is in flight')
