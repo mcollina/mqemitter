@@ -356,6 +356,26 @@ function buildTests (opts) {
       })
     })
   })
+
+  test('emit & receive buffers', function (t) {
+    var e = builder()
+    var msg = new Buffer('hello')
+    var expected = {
+      topic: 'hello',
+      payload: msg
+    }
+
+    e.on('hello', function (message, cb) {
+      t.deepEqual(msg, message.payload)
+      cb()
+    }, function () {
+      e.emit(expected, function () {
+        e.close(function () {
+          t.end()
+        })
+      })
+    })
+  })
 }
 
 module.exports = buildTests
