@@ -31,6 +31,7 @@
   "devDependencies": {
     "faucet": "0.0.1",
     "pre-commit": "^1.0.7",
+    "safe-buffer": "^5.1.1",
     "standard": "^10.0.0",
     "tape": "^4.7.0"
   },
