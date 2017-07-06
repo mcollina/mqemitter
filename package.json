@@ -31,11 +31,11 @@
   "devDependencies": {
     "faucet": "0.0.1",
     "pre-commit": "^1.0.7",
-    "standard": "^9.0.0",
-    "tape": "^4.0.0"
+    "standard": "^10.0.0",
+    "tape": "^4.7.0"
   },
   "dependencies": {
     "fastparallel": "^2.0.0",
-    "qlobber": "~0.7.0"
+    "qlobber": "~0.8.0"
   }
 }

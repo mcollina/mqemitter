@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016, Matteo Collina <hello@matteocollina.com>
+ * Copyright (c) 2014-2017, Matteo Collina <hello@matteocollina.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,6 +14,8 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 'use strict'
+
+const Buffer = require('safe-buffer').Buffer
 
 function buildTests (opts) {
   var builder = opts.builder
@@ -359,7 +361,7 @@ function buildTests (opts) {
 
   test('emit & receive buffers', function (t) {
     var e = builder()
-    var msg = new Buffer('hello')
+    var msg = Buffer.from('hello')
     var expected = {
       topic: 'hello',
       payload: msg
