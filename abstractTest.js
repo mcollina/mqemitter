@@ -15,7 +15,7 @@
 */
 'use strict'
 
-const Buffer = require('safe-buffer').Buffer
+var Buffer = require('safe-buffer').Buffer
 
 function buildTests (opts) {
   var builder = opts.builder
