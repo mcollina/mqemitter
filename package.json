@@ -31,9 +31,9 @@
   "devDependencies": {
     "faucet": "0.0.1",
     "pre-commit": "^1.2.2",
-    "safe-buffer": "^5.1.2",
-    "standard": "^12.0.1",
-    "tape": "^4.10.2"
+    "safe-buffer": "^5.2.0",
+    "standard": "^13.0.1",
+    "tape": "^4.11.0"
   },
   "dependencies": {
     "fastparallel": "^2.3.0",
