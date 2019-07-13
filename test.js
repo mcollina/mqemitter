@@ -25,7 +25,7 @@ abstractTest({
 })
 
 test('queue concurrency', function (t) {
-  t.plan(2)
+  t.plan(3)
 
   var e = mq({ concurrency: 1 })
   var completed1 = false
@@ -47,6 +47,8 @@ test('queue concurrency', function (t) {
   e.emit({ topic: 'hello 2' }, function () {
     t.ok(completed1, 'the first message must be completed')
   })
+
+  t.equal(e.length, 1)
 })
 
 test('without any listeners and a callback', function (t) {
