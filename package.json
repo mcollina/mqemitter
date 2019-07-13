@@ -34,7 +34,7 @@
     "nyc": "^14.1.1",
     "pre-commit": "^1.2.2",
     "safe-buffer": "^5.2.0",
-    "standard": "^13.0.1",
+    "standard": "^13.0.2",
     "tape": "^4.11.0"
   },
   "dependencies": {
