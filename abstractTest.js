@@ -252,7 +252,7 @@ module.exports = function abstractTests (opts) {
       t.fail('should not catch')
       cb()
     }, function () {
-      // this will be catched
+      // this will not be catched
       e.emit({ topic: 'hello/' }, function () {
         e.close(function () {
           t.pass('closed')
