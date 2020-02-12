@@ -74,7 +74,8 @@ For more information on wildcards, see [this explanation](#wildcards) or [Qlobbe
 ## emitter.emit (message, callback)
 
 - `message` `<object>`
-- `callback` `<Function>`
+- `callback` `<Function>` `(error) => void`
+  - error `<Error>` | `null`
 
 Emit the given message, which must have a `topic` property, which can contain wildcards as defined on creation.
 
@@ -82,7 +83,7 @@ Emit the given message, which must have a `topic` property, which can contain wi
 
 - `topic` `<string>`
 - `listener` `<Function>` `(message, done) => void`
-- `callback` `<Function>` `(err) => void`
+- `callback` `<Function>` `() => void`
 
 Add the given listener to the passed topic. Topic can contain wildcards, as defined on creation.
 
