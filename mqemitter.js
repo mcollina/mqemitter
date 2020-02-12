@@ -86,7 +86,7 @@ MQEmitter.prototype.emit = function emit (message, cb) {
     return cb(new Error('mqemitter is closed'))
   }
 
-  cb = cb || nop
+  cb = cb || noop
 
   if (this.concurrency > 0 && this.current >= this.concurrency) {
     this._messageQueue.push(message)
@@ -114,6 +114,6 @@ MQEmitter.prototype._do = function (message, callback) {
   return this
 }
 
-function nop () {}
+function noop () {}
 
 module.exports = MQEmitter
