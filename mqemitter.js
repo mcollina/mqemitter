@@ -1,15 +1,15 @@
 'use strict'
 
-var Qlobber = require('qlobber').Qlobber
-var assert = require('assert')
-var fastparallel = require('fastparallel')
+const { Qlobber } = require('qlobber')
+const assert = require('assert')
+const fastparallel = require('fastparallel')
 
 function MQEmitter (opts) {
   if (!(this instanceof MQEmitter)) {
     return new MQEmitter(opts)
   }
 
-  var that = this
+  const that = this
 
   opts = opts || {}
 
@@ -39,8 +39,8 @@ function MQEmitter (opts) {
   function released () {
     that.current--
 
-    var message = that._messageQueue.shift()
-    var callback = that._messageCallbacks.shift()
+    const message = that._messageQueue.shift()
+    const callback = that._messageCallbacks.shift()
 
     if (message) {
       that._do(message, callback)
@@ -106,7 +106,7 @@ MQEmitter.prototype.close = function close (cb) {
 }
 
 MQEmitter.prototype._do = function (message, callback) {
-  var matches = this._matcher.match(message.topic)
+  const matches = this._matcher.match(message.topic)
 
   this.current++
   this._parallel(this, matches, message, callback)

@@ -1,11 +1,11 @@
 'use strict'
 
-var mqemitter = require('./')
-var emitter = mqemitter({ concurrency: 10 })
-var total = 1000000
+const mqemitter = require('./')
+const emitter = mqemitter({ concurrency: 10 })
+const total = 1000000
 var written = 0
 var received = 0
-var timerKey = 'time for sending ' + total + ' messages'
+const timerKey = 'time for sending ' + total + ' messages'
 
 function write () {
   if (written === total) {

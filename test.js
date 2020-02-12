@@ -1,9 +1,9 @@
 'use strict'
 
-var abstractTest = require('./abstractTest')
-var t = require('tap')
-var test = t.test
-var mq = require('./')
+const abstractTest = require('./abstractTest')
+const t = require('tap')
+const test = t.test
+const mq = require('./')
 
 abstractTest({
   builder: mq,
@@ -13,7 +13,7 @@ abstractTest({
 test('queue concurrency', function (t) {
   t.plan(3)
 
-  var e = mq({ concurrency: 1 })
+  const e = mq({ concurrency: 1 })
   var completed1 = false
 
   t.equal(e.concurrency, 1)
@@ -38,8 +38,8 @@ test('queue concurrency', function (t) {
 })
 
 test('without any listeners and a callback', function (t) {
-  var e = mq()
-  var expected = {
+  const e = mq()
+  const expected = {
     topic: 'hello world',
     payload: { my: 'message' }
   }
@@ -55,7 +55,7 @@ test('without any listeners and a callback', function (t) {
 test('queue concurrency with overlapping subscriptions', function (t) {
   t.plan(3)
 
-  var e = mq({ concurrency: 1 })
+  const e = mq({ concurrency: 1 })
   var completed1 = false
 
   t.equal(e.concurrency, 1)

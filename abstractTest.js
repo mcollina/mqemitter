@@ -1,14 +1,14 @@
 'use strict'
 
 function buildTests (opts) {
-  var builder = opts.builder
-  var test = opts.test
+  const builder = opts.builder
+  const test = opts.test
 
   test('support on and emit', function (t) {
     t.plan(4)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -30,8 +30,8 @@ function buildTests (opts) {
   test('support multiple subscribers', function (t) {
     t.plan(3)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -56,8 +56,8 @@ function buildTests (opts) {
   test('support multiple subscribers and unsubscribers', function (t) {
     t.plan(2)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -87,8 +87,8 @@ function buildTests (opts) {
   test('removeListener', function (t) {
     t.plan(1)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -117,8 +117,8 @@ function buildTests (opts) {
   test('without a callback on emit and on', function (t) {
     t.plan(1)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -138,8 +138,8 @@ function buildTests (opts) {
   test('without any listeners', function (t) {
     t.plan(2)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -154,8 +154,8 @@ function buildTests (opts) {
   test('support one level wildcard', function (t) {
     t.plan(2)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello/world',
       payload: { my: 'message' }
     }
@@ -179,8 +179,8 @@ function buildTests (opts) {
   test('support changing one level wildcard', function (t) {
     t.plan(2)
 
-    var e = builder({ wildcardOne: '~' })
-    var expected = {
+    const e = builder({ wildcardOne: '~' })
+    const expected = {
       topic: 'hello/world',
       payload: { my: 'message' }
     }
@@ -200,8 +200,8 @@ function buildTests (opts) {
   test('support deep wildcard', function (t) {
     t.plan(2)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello/my/world',
       payload: { my: 'message' }
     }
@@ -221,8 +221,8 @@ function buildTests (opts) {
   test('support changing deep wildcard', function (t) {
     t.plan(2)
 
-    var e = builder({ wildcardSome: '*' })
-    var expected = {
+    const e = builder({ wildcardSome: '*' })
+    const expected = {
       topic: 'hello/my/world',
       payload: { my: 'message' }
     }
@@ -242,8 +242,8 @@ function buildTests (opts) {
   test('support changing the level separator', function (t) {
     t.plan(2)
 
-    var e = builder({ separator: '~' })
-    var expected = {
+    const e = builder({ separator: '~' })
+    const expected = {
       topic: 'hello~world',
       payload: { my: 'message' }
     }
@@ -261,7 +261,7 @@ function buildTests (opts) {
   })
 
   test('close support', function (t) {
-    var e = builder()
+    const e = builder()
     var check = false
 
     t.notOk(e.closed, 'must have a false closed property')
@@ -276,7 +276,7 @@ function buildTests (opts) {
   })
 
   test('emit after close errors', function (t) {
-    var e = builder()
+    const e = builder()
 
     e.close(function () {
       e.emit({ topic: 'hello' }, function (err) {
@@ -287,8 +287,8 @@ function buildTests (opts) {
   })
 
   test('support multiple subscribers with wildcards', function (t) {
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello/world',
       payload: { my: 'message' }
     }
@@ -315,8 +315,8 @@ function buildTests (opts) {
   })
 
   test('support multiple subscribers with wildcards (deep)', function (t) {
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello/my/world',
       payload: { my: 'message' }
     }
@@ -343,9 +343,9 @@ function buildTests (opts) {
   })
 
   test('emit & receive buffers', function (t) {
-    var e = builder()
-    var msg = Buffer.from('hello')
-    var expected = {
+    const e = builder()
+    const msg = Buffer.from('hello')
+    const expected = {
       topic: 'hello',
       payload: msg
     }
