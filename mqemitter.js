@@ -24,7 +24,7 @@ function MQEmitter (opts) {
 
   this.current = 0
   this._matcher = new Qlobber({
-    match_empty_levels: opts.match_empty_levels || false,
+    match_empty_levels: opts.matchEmptyLevels || false,
     separator: opts.separator || '/',
     wildcard_one: opts.wildcardOne || '+',
     wildcard_some: opts.wildcardSome || '#'

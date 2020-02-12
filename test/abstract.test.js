@@ -178,7 +178,7 @@ test('support one level wildcard', function (t) {
 test('support one level wildcard - not match empty words', function (t) {
   t.plan(2)
 
-  const e = mq({ match_empty_levels: false })
+  const e = mq({ matchEmptyLevels: false })
   const expected = {
     topic: 'hello/dummy/world',
     payload: { my: 'message' }
@@ -203,7 +203,7 @@ test('support one level wildcard - not match empty words', function (t) {
 test('support one level wildcard - match empty words', function (t) {
   t.plan(3)
 
-  const e = mq({ match_empty_levels: true })
+  const e = mq({ matchEmptyLevels: true })
 
   e.on('hello/+/world', function (message, cb) {
     const topic = message.topic
