@@ -225,6 +225,42 @@ module.exports = function abstractTests (opts) {
     })
   })
 
+  test('support one level wildcard - match empty words', function (t) {
+    t.plan(2)
+
+    const e = builder({ matchEmptyLevels: true })
+
+    e.on('hello/+', function (message, cb) {
+      t.equal(message.topic, 'hello/')
+      cb()
+    }, function () {
+      // this will be catched
+      e.emit({ topic: 'hello/' }, function () {
+        e.close(function () {
+          t.pass('closed')
+        })
+      })
+    })
+  })
+
+  test('support one level wildcard - not match empty words', function (t) {
+    t.plan(1)
+
+    const e = builder({ matchEmptyLevels: false })
+
+    e.on('hello/+', function (message, cb) {
+      t.fail('should not catch')
+      cb()
+    }, function () {
+      // this will be catched
+      e.emit({ topic: 'hello/' }, function () {
+        e.close(function () {
+          t.pass('closed')
+        })
+      })
+    })
+  })
+
   test('support changing one level wildcard', function (t) {
     t.plan(2)
 
