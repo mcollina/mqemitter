@@ -23,6 +23,9 @@
     "url": "http://github.com/mcollina/mqemitter/issues"
   },
   "author": "Matteo Collina <hello@matteocollina.com>",
+  "engines": {
+    "node": ">=10"
+  },
   "keywords": [
     "emitter",
     "events",
