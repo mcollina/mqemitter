@@ -5,8 +5,8 @@
   "main": "mqemitter.js",
   "scripts": {
     "lint": "standard",
-    "unit": "tap --no-esm -J test.js",
-    "unit:report": "tap --no-esm -J test.js --cov --coverage-report=html --coverage-report=cobertura | tee out.tap",
+    "unit": "tap --no-esm --nyc-arg='-x abstractTest.js' -J test.js",
+    "unit:report": "tap --no-esm --nyc-arg='-x abstractTest.js' -J test.js --cov --coverage-report=html --coverage-report=cobertura | tee out.tap",
     "test:report": "npm run lint && npm run unit:report",
     "test": "npm run lint && npm run unit",
     "test:ci": "npm run lint && npm run unit -- --cov --coverage-report=lcovonly"
