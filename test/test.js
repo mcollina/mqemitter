@@ -1,9 +1,9 @@
 'use strict'
 
 const { test } = require('tap')
-const mq = require('./')
+const mq = require('../')
 
-require('./abstractTest')({
+require('../abstractTest')({
   builder: mq,
   test: test
 })
