@@ -35,6 +35,8 @@ const notify = function (msg: Message, cb: () => void) {
 
 mq.on('hello/+', notify)
 
+mq.emit('hello/world')
+
 mq.emit('hello/world', function (err) {
   console.log(err)
 })

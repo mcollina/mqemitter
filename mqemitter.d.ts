@@ -15,7 +15,7 @@ interface MQEmitterOptions {
 export type Message = object & { topic: string }
 
 export interface MQEmitter {
-  emit(topic: string, callback: (error?: Error) => void): void
+  emit(topic: string, callback?: (error?: Error) => void): void
   on(topic: string, listener: (message: Message, done: () => void) => void, callback?: () => void): void
   removeListener(topic: string, listener: (message: Message, done: () => void) => void, callback?: () => void): void
   close(callback: () => void): void
