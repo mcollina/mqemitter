@@ -175,6 +175,54 @@ test('support one level wildcard', function (t) {
   })
 })
 
+test('support one level wildcard - not match empty words', function (t) {
+  t.plan(2)
+
+  const e = mq({ match_empty_levels: false })
+  const expected = {
+    topic: 'hello/dummy/world',
+    payload: { my: 'message' }
+  }
+
+  e.on('hello/+/world', function (message, cb) {
+    t.equal(message.topic, 'hello/dummy/world')
+    cb()
+  }, function () {
+    // this will not be catched
+    e.emit({ topic: 'hello//world' })
+
+    // this will be catched
+    e.emit(expected, function () {
+      e.close(function () {
+        t.pass('closed')
+      })
+    })
+  })
+})
+
+test('support one level wildcard - match empty words', function (t) {
+  t.plan(3)
+
+  const e = mq({ match_empty_levels: true })
+
+  e.on('hello/+/world', function (message, cb) {
+    const topic = message.topic
+    if (topic === 'hello//world' || topic === 'hello/dummy/world') {
+      t.pass('received ' + topic)
+    }
+    cb()
+  }, function () {
+    // this will be catched
+    e.emit({ topic: 'hello//world' })
+    // this will be catched
+    e.emit({ topic: 'hello/dummy/world' }, function () {
+      e.close(function () {
+        t.pass('closed')
+      })
+    })
+  })
+})
+
 test('support changing one level wildcard', function (t) {
   t.plan(2)
 

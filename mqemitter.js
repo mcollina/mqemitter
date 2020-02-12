@@ -13,10 +13,6 @@ function MQEmitter (opts) {
 
   opts = opts || {}
 
-  opts.wildcardOne = opts.wildcardOne || '+'
-  opts.wildcardSome = opts.wildcardSome || '#'
-  opts.separator = opts.separator || '/'
-
   this._messageQueue = []
   this._messageCallbacks = []
   this._parallel = fastparallel({
@@ -28,9 +24,10 @@ function MQEmitter (opts) {
 
   this.current = 0
   this._matcher = new Qlobber({
-    separator: opts.separator,
-    wildcard_one: opts.wildcardOne,
-    wildcard_some: opts.wildcardSome
+    match_empty_levels: opts.match_empty_levels || false,
+    separator: opts.separator || '/',
+    wildcard_one: opts.wildcardOne || '+',
+    wildcard_some: opts.wildcardSome || '#'
   })
 
   this.closed = false
