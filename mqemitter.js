@@ -20,7 +20,7 @@ function MQEmitter (opts) {
     released: released
   })
 
-  this.concurrency = opts.concurrency
+  this.concurrency = opts.concurrency || 0
 
   this.current = 0
   this._matcher = new Qlobber({
