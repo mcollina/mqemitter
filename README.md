@@ -69,7 +69,7 @@ Create a new MQEmitter class.
 MQEmitter is the class and function exposed by this module.
 It can be created by `MQEmitter()` or using `new MQEmitter()`.
 
-For more information on wildcards, see [this explanation](#wildcards) or [Qlobber](http://npmjs.com/qlobber).
+For more information on wildcards, see [this explanation](#wildcards) or [Qlobber](https://www.npmjs.com/qlobber).
 
 ## emitter.emit (message, callback)
 
