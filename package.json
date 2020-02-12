@@ -4,7 +4,9 @@
   "description": "An Opinionated Message Queue with an emitter-style API",
   "main": "mqemitter.js",
   "scripts": {
-    "lint": "standard",
+    "lint": "npm run lint:standard && npm run lint:markdown",
+    "lint:standard": "standard --verbose | snazzy",
+    "lint:markdown": "markdownlint README.md",
     "unit": "tap --no-esm --nyc-arg='-x abstractTest.js' -J test.js",
     "unit:report": "tap --no-esm --nyc-arg='-x abstractTest.js' -J test.js --cov --coverage-report=html --coverage-report=cobertura | tee out.tap",
     "test:report": "npm run lint && npm run unit:report",
@@ -38,7 +40,9 @@
   ],
   "license": "ISC",
   "devDependencies": {
+    "markdownlint-cli": "^0.22.0",
     "pre-commit": "^1.2.2",
+    "snazzy": "^8.0.0",
     "standard": "^14.3.1",
     "tap": "^14.10.6"
   },
