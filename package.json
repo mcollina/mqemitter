@@ -5,10 +5,15 @@
   "main": "mqemitter.js",
   "scripts": {
     "lint": "standard",
-    "test": "standard && tape test.js | faucet",
-    "coverage": "nyc --reporter=lcov tape test.js"
+    "unit": "tap --no-esm -J test.js",
+    "unit:report": "tap --no-esm -J test/*.js --cov --coverage-report=html --coverage-report=cobertura | tee out.tap",
+    "test:report": "npm run lint && npm run unit:report",
+    "test": "npm run lint && npm run unit",
+    "test:ci": "npm run lint && npm run unit -- --cov --coverage-report=lcovonly"
   },
-  "pre-commit": "test",
+  "pre-commit": [
+    "test"
+  ],
   "website": "https://github.com/mcollina/mqemitter",
   "repository": {
     "type": "git",
@@ -30,10 +35,8 @@
   ],
   "license": "ISC",
   "devDependencies": {
-    "faucet": "0.0.1",
-    "nyc": "^15.0.0",
-    "standard": "^13.0.2",
-    "tape": "^4.11.0"
+    "standard": "^14.3.1",
+    "tap": "^14.10.6"
   },
   "dependencies": {
     "fastparallel": "^2.3.0",

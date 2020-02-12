@@ -16,12 +16,13 @@
 'use strict'
 
 var abstractTest = require('./abstractTest')
-var test = require('tape').test
+var t = require('tap')
+var test = t.test
 var mq = require('./')
 
 abstractTest({
   builder: mq,
-  test: require('tape').test
+  test: test
 })
 
 test('queue concurrency', function (t) {
