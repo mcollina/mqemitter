@@ -1,7 +1,12 @@
 'use strict'
 
 const { test } = require('tap')
-const mq = require('../')
+const mq = require('./')
+
+require('./abstractTest')({
+  builder: mq,
+  test: test
+})
 
 test('queue concurrency', function (t) {
   t.plan(3)
