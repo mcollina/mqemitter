@@ -1,6 +1,6 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('tape')
 const mq = require('../')
 
 require('../abstractTest')({
