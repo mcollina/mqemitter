@@ -15,7 +15,7 @@ module.exports = function abstractTests (opts) {
     }
 
     e.on('hello world', function (message, cb) {
-      t.equal(e._current, 1, 'number of _current messages')
+      t.equal(e.current, 1, 'number of current messages')
       t.deepEqual(message, expected)
       t.equal(this, e)
       cb()
@@ -146,7 +146,7 @@ module.exports = function abstractTests (opts) {
     }
 
     e.emit(expected)
-    t.equal(e._current, 0, 'reset the _current messages trackers')
+    t.equal(e.current, 0, 'reset the current messages trackers')
     e.close(function () {
       t.pass('closed')
     })

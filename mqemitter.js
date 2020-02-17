@@ -22,7 +22,7 @@ function MQEmitter (opts) {
 
   this.concurrency = opts.concurrency || 0
 
-  this._current = 0
+  this.current = 0
   this._matcher = new Qlobber({
     match_empty_levels: opts.matchEmptyLevels || false,
     separator: opts.separator || '/',
@@ -34,7 +34,7 @@ function MQEmitter (opts) {
   this._released = released
 
   function released () {
-    that._current--
+    that.current--
 
     const message = that._messageQueue.shift()
     const callback = that._messageCallbacks.shift()
@@ -85,7 +85,7 @@ MQEmitter.prototype.emit = function emit (message, cb) {
 
   cb = cb || noop
 
-  if (this.concurrency > 0 && this._current >= this.concurrency) {
+  if (this.concurrency > 0 && this.current >= this.concurrency) {
     this._messageQueue.push(message)
     this._messageCallbacks.push(cb)
   } else {
@@ -105,7 +105,7 @@ MQEmitter.prototype.close = function close (cb) {
 MQEmitter.prototype._do = function (message, callback) {
   const matches = this._matcher.match(message.topic)
 
-  this._current++
+  this.current++
   this._parallel(this, matches, message, callback)
 
   return this
