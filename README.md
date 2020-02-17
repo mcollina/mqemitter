@@ -108,7 +108,7 @@ __MQEmitter__ supports the use of wildcards: every topic is splitted according t
 The wildcard character `+` matches exactly _non-empty_ one word:
 
 ```js
-const mqt = require('mqemitter')
+const mq = require('mqemitter')
 const emitter = mq()
 
 emitter.on('hello/+/world', function(message, cb) {
@@ -129,7 +129,7 @@ emitter.emit({ topic: 'hello//world', something: 'more' })
 The wildcard character `+` matches one word:
 
 ```js
-const mqt = require('mqemitter')
+const mq = require('mqemitter')
 const emitter = mq({ matchEmptyLevels: true })
 
 emitter.on('hello/+/world', function(message, cb) {
@@ -152,7 +152,7 @@ emitter.emit({ topic: 'hello//world', something: 'more' })
 The wildcard character `#` matches zero or more words:
 
 ```js
-const mqt = require('mqemitter')
+const mq = require('mqemitter')
 const emitter = mq()
 
 emitter.on('hello/#', function(message, cb) {
