@@ -46,8 +46,8 @@ profile*
 package-lock.json
 
 # generated code
-test/typescript/*.js
-test/typescript/*.map
+test/types/*.js
+test/types/*.map
 
 # test tap report
 out.tap
