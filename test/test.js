@@ -77,3 +77,13 @@ test('queue concurrency with overlapping subscriptions', function (t) {
     })
   })
 })
+
+test('removeListener without a callback does not throw', function (t) {
+  const e = mq()
+  function fn () {}
+
+  e.on('hello', fn)
+  e.removeListener('hello', fn)
+
+  t.end()
+})
