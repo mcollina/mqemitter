@@ -1,31 +1,15 @@
-/*
- * Copyright (c) 2014-2017, Matteo Collina <hello@matteocollina.com>
- *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
- * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-*/
+
 'use strict'
 
-var Buffer = require('safe-buffer').Buffer
-
-function buildTests (opts) {
+module.exports = function abstractTests (opts) {
   var builder = opts.builder
   var test = opts.test
 
   test('support on and emit', function (t) {
     t.plan(4)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -47,8 +31,8 @@ function buildTests (opts) {
   test('support multiple subscribers', function (t) {
     t.plan(3)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -73,8 +57,8 @@ function buildTests (opts) {
   test('support multiple subscribers and unsubscribers', function (t) {
     t.plan(2)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -104,8 +88,8 @@ function buildTests (opts) {
   test('removeListener', function (t) {
     t.plan(1)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -134,8 +118,8 @@ function buildTests (opts) {
   test('without a callback on emit and on', function (t) {
     t.plan(1)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -155,8 +139,8 @@ function buildTests (opts) {
   test('without any listeners', function (t) {
     t.plan(2)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello world',
       payload: { my: 'message' }
     }
@@ -171,8 +155,8 @@ function buildTests (opts) {
   test('support one level wildcard', function (t) {
     t.plan(2)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello/world',
       payload: { my: 'message' }
     }
@@ -193,11 +177,95 @@ function buildTests (opts) {
     })
   })
 
+  test('support one level wildcard - not match empty words', function (t) {
+    t.plan(2)
+
+    const e = builder({ matchEmptyLevels: false })
+    const expected = {
+      topic: 'hello/dummy/world',
+      payload: { my: 'message' }
+    }
+
+    e.on('hello/+/world', function (message, cb) {
+      t.equal(message.topic, 'hello/dummy/world')
+      cb()
+    }, function () {
+      // this will not be catched
+      e.emit({ topic: 'hello//world' })
+
+      // this will be catched
+      e.emit(expected, function () {
+        e.close(function () {
+          t.pass('closed')
+        })
+      })
+    })
+  })
+
+  test('support one level wildcard - match empty words', function (t) {
+    t.plan(3)
+
+    const e = builder({ matchEmptyLevels: true })
+
+    e.on('hello/+/world', function (message, cb) {
+      const topic = message.topic
+      if (topic === 'hello//world' || topic === 'hello/dummy/world') {
+        t.pass('received ' + topic)
+      }
+      cb()
+    }, function () {
+      // this will be catched
+      e.emit({ topic: 'hello//world' })
+      // this will be catched
+      e.emit({ topic: 'hello/dummy/world' }, function () {
+        e.close(function () {
+          t.pass('closed')
+        })
+      })
+    })
+  })
+
+  test('support one level wildcard - match empty words', function (t) {
+    t.plan(2)
+
+    const e = builder({ matchEmptyLevels: true })
+
+    e.on('hello/+', function (message, cb) {
+      t.equal(message.topic, 'hello/')
+      cb()
+    }, function () {
+      // this will be catched
+      e.emit({ topic: 'hello/' }, function () {
+        e.close(function () {
+          t.pass('closed')
+        })
+      })
+    })
+  })
+
+  test('support one level wildcard - not match empty words', function (t) {
+    t.plan(1)
+
+    const e = builder({ matchEmptyLevels: false })
+
+    e.on('hello/+', function (message, cb) {
+      t.fail('should not catch')
+      cb()
+    }, function () {
+      // this will not be catched
+      e.emit({ topic: 'hello/' }, function () {
+        e.close(function () {
+          t.pass('closed')
+        })
+      })
+    })
+  })
+
   test('support changing one level wildcard', function (t) {
     t.plan(2)
 
-    var e = builder({ wildcardOne: '~' })
-    var expected = {
+    const e = builder({ wildcardOne: '~' })
+    const expected = {
       topic: 'hello/world',
       payload: { my: 'message' }
     }
@@ -217,8 +285,8 @@ function buildTests (opts) {
   test('support deep wildcard', function (t) {
     t.plan(2)
 
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello/my/world',
       payload: { my: 'message' }
     }
@@ -238,8 +306,8 @@ function buildTests (opts) {
   test('support changing deep wildcard', function (t) {
     t.plan(2)
 
-    var e = builder({ wildcardSome: '*' })
-    var expected = {
+    const e = builder({ wildcardSome: '*' })
+    const expected = {
       topic: 'hello/my/world',
       payload: { my: 'message' }
     }
@@ -259,8 +327,8 @@ function buildTests (opts) {
   test('support changing the level separator', function (t) {
     t.plan(2)
 
-    var e = builder({ separator: '~' })
-    var expected = {
+    const e = builder({ separator: '~' })
+    const expected = {
       topic: 'hello~world',
       payload: { my: 'message' }
     }
@@ -278,7 +346,7 @@ function buildTests (opts) {
   })
 
   test('close support', function (t) {
-    var e = builder()
+    const e = builder()
     var check = false
 
     t.notOk(e.closed, 'must have a false closed property')
@@ -293,7 +361,7 @@ function buildTests (opts) {
   })
 
   test('emit after close errors', function (t) {
-    var e = builder()
+    const e = builder()
 
     e.close(function () {
       e.emit({ topic: 'hello' }, function (err) {
@@ -304,8 +372,8 @@ function buildTests (opts) {
   })
 
   test('support multiple subscribers with wildcards', function (t) {
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello/world',
       payload: { my: 'message' }
     }
@@ -332,8 +400,8 @@ function buildTests (opts) {
   })
 
   test('support multiple subscribers with wildcards (deep)', function (t) {
-    var e = builder()
-    var expected = {
+    const e = builder()
+    const expected = {
       topic: 'hello/my/world',
       payload: { my: 'message' }
     }
@@ -360,9 +428,9 @@ function buildTests (opts) {
   })
 
   test('emit & receive buffers', function (t) {
-    var e = builder()
-    var msg = Buffer.from('hello')
-    var expected = {
+    const e = builder()
+    const msg = Buffer.from('hello')
+    const expected = {
       topic: 'hello',
       payload: msg
     }
@@ -379,5 +447,3 @@ function buildTests (opts) {
     })
   })
 }
-
-module.exports = buildTests
