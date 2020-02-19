@@ -24,4 +24,4 @@ jobs:
 
       - name: Run tests
         run: |
-          npm run test:report
+          npm run test
