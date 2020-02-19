@@ -87,3 +87,17 @@ test('removeListener without a callback does not throw', function (t) {
 
   t.end()
 })
+
+test('set defaults to opts', function (t) {
+  const opts = {}
+  mq(opts)
+
+  t.deepEqual(opts, {
+    matchEmptyLevels: true,
+    separator: '/',
+    wildcardOne: '+',
+    wildcardSome: '#'
+  })
+
+  t.end()
+})
