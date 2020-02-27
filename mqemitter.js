@@ -83,11 +83,11 @@ MQEmitter.prototype.removeListener = function removeListener (topic, notify, don
 MQEmitter.prototype.emit = function emit (message, cb) {
   assert(message)
 
+  cb = cb || noop
+
   if (this.closed) {
     return cb(new Error('mqemitter is closed'))
   }
-
-  cb = cb || noop
 
   if (this.concurrency > 0 && this.current >= this.concurrency) {
     this._messageQueue.push(message)
