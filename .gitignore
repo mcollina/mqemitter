@@ -56,3 +56,5 @@ libleveldb.so
 libleveldb.a
 test-data/
 _benchdb_*
+
+package-lock.json

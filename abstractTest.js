@@ -446,4 +446,22 @@ module.exports = function abstractTests (opts) {
       })
     })
   })
+
+  test('calling emit without cb when closed doesn\'t throw error', function (t) {
+    const e = builder()
+    const msg = Buffer.from('hello')
+    const expected = {
+      topic: 'hello',
+      payload: msg
+    }
+
+    e.close(function () {
+      try {
+        e.emit(expected)
+      } catch (error) {
+        t.error('throws error')
+      }
+      t.end()
+    })
+  })
 }
