@@ -321,13 +321,12 @@ module.exports = function abstractTests (opts) {
       t.equal(message.topic, 'hello')
       cb()
     }, function () {
+      e.emit(wrong) // this should not be received
       e.emit(expected, function () {
         e.close(function () {
           t.pass('closed')
         })
       })
-
-      e.emit(wrong)
     })
   })
 
