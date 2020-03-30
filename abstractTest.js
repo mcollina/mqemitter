@@ -303,10 +303,10 @@ module.exports = function abstractTests (opts) {
     })
   })
 
-  test('support deep wildcard - match empty levels', function (t) {
+  test('support deep wildcard - match empty words', function (t) {
     t.plan(2)
 
-    const e = builder()
+    const e = builder({ matchEmptyLevels: true })
     const expected = {
       topic: 'hello',
       payload: { my: 'message' }
@@ -318,7 +318,7 @@ module.exports = function abstractTests (opts) {
     }
 
     e.on('hello/#', function (message, cb) {
-      t.equal(message.topic, 'hello')
+      t.equal(message.topic, expected.topic)
       cb()
     }, function () {
       e.emit(wrong) // this should not be received
