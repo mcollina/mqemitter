@@ -303,6 +303,34 @@ module.exports = function abstractTests (opts) {
     })
   })
 
+  test('support deep wildcard - match empty levels', function (t) {
+    t.plan(2)
+
+    const e = builder()
+    const expected = {
+      topic: 'hello',
+      payload: { my: 'message' }
+    }
+
+    const wrong = {
+      topic: 'hellooo',
+      payload: { my: 'message' }
+    }
+
+    e.on('hello/#', function (message, cb) {
+      t.equal(message.topic, 'hello')
+      cb()
+    }, function () {
+      e.emit(expected, function () {
+        e.close(function () {
+          t.pass('closed')
+        })
+      })
+
+      e.emit(wrong)
+    })
+  })
+
   test('support changing deep wildcard', function (t) {
     t.plan(2)
 
