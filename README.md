@@ -115,7 +115,7 @@ emitter.on('hello/+/world', function(message, cb) {
   // will ONLY capture { topic: 'hello/my/world', 'something': 'more' }
   console.log(message)
   cb()
-}
+})
 emitter.on('hello/+', function(message, cb) {
   // will not be called
   console.log(message)
