@@ -302,7 +302,7 @@ module.exports = function abstractTests (opts) {
       })
     })
   })
-  
+
   test('support deep wildcard without separator', function (t) {
     t.plan(2)
 
