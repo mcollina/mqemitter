@@ -303,6 +303,27 @@ module.exports = function abstractTests (opts) {
     })
   })
 
+  test('support deep wildcard without separator', function (t) {
+    t.plan(2)
+
+    const e = builder()
+    const expected = {
+      topic: 'hello',
+      payload: { my: 'message' }
+    }
+
+    e.on('#', function (message, cb) {
+      t.equal(message.topic, expected.topic)
+      cb()
+    }, function () {
+      e.emit(expected, function () {
+        e.close(function () {
+          t.pass('closed')
+        })
+      })
+    })
+  })
+
   test('support deep wildcard - match empty words', function (t) {
     t.plan(2)
 
