@@ -5,7 +5,7 @@ const mq = require('../')
 
 require('../abstractTest')({
   builder: mq,
-  test: test
+  test
 })
 
 test('queue concurrency', function (t) {

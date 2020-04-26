@@ -21,7 +21,7 @@ function MQEmitter (opts) {
   this._messageCallbacks = []
   this._parallel = fastparallel({
     results: false,
-    released: released
+    released
   })
 
   this.concurrency = opts.concurrency || 0
