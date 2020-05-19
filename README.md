@@ -58,7 +58,7 @@ emitter.emit(message, function () {
 ## new MQEmitter ([options])
 
 - options `<object>`
-  - `concurrency` `<boolean>` maximum number of concurrent messages that can be on concurrent delivery. __Default__: `0`
+  - `concurrency` `<number>` maximum number of concurrent messages that can be on concurrent delivery. __Default__: `0`
   - `wildcardOne` `<string>` a char to use for matching exactly one _non-empty_ level word. __Default__: `+`
   - `wildcardSome` `<string>` a char to use for matching multiple level wildcards. __Default__: #`
   - `matchEmptyLevels` `<boolean>` If true then `wildcardOne` also matches an empty word. __Default__: `true`
