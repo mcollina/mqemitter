@@ -4,9 +4,9 @@
 
 /// <reference types="node" />
 
-declare function MQEmitter (options?: MQEmitterOptions): MQEmitter
+export default function MQEmitter (options?: MQEmitterOptions): MQEmitter
 
-interface MQEmitterOptions {
+export interface MQEmitterOptions {
   concurrency?: number
   matchEmptyLevels?: boolean
   separator?: string
@@ -20,7 +20,7 @@ export interface MQEmitter {
   current: number
   concurrent: number
   on(topic: string, listener: (message: Message, done: () => void) => void, callback?: () => void): this
-  emit(topic: string, callback?: (error?: Error) => void): void
-  removeListener(topic: string, listener: (message: Message, done: () => void) => void, callback?: () => void): void
+  emit(message: Message, callback?: (error?: Error) => void): void
+  removeListener(topic: string, listener?: (message: Message, done: () => void) => void, callback?: () => void): void
   close(callback: () => void): void
 }

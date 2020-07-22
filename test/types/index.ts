@@ -1,7 +1,7 @@
 /* eslint no-unused-vars: 0 */
 /* eslint no-undef: 0 */
 
-import { MQEmitter, Message } from '../../mqemitter'
+import MQEmitter, { Message } from '../../mqemitter'
 
 const noop = function () {}
 
@@ -35,9 +35,9 @@ const notify = function (msg: Message, cb: () => void) {
 
 mq.on('hello/+', notify)
 
-mq.emit('hello/world')
+mq.emit({ topic: 'hello/world' })
 
-mq.emit('hello/world', function (err) {
+mq.emit({ topic: 'hello/world' }, function (err) {
   console.log(err)
 })
 

@@ -70,7 +70,6 @@ MQEmitter.prototype.on = function on (topic, notify, done) {
 
 MQEmitter.prototype.removeListener = function removeListener (topic, notify, done) {
   assert(topic)
-  assert(notify)
   this._matcher.remove(topic, notify)
 
   if (done) {
