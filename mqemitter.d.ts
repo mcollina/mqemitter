@@ -1,10 +1,8 @@
-/* eslint no-unused-vars: 0 */
-/* eslint no-undef: 0 */
-/* eslint space-infix-ops: 0 */
-
 /// <reference types="node" />
 
-declare function MQEmitter (options?: MQEmitterOptions): MQEmitter
+declare function MQEmitter(options?: MQEmitterOptions): MQEmitter
+
+export default MQEmitter
 
 interface MQEmitterOptions {
   concurrency?: number
@@ -14,13 +12,13 @@ interface MQEmitterOptions {
   wildcardSome?: string
 }
 
-export type Message = object & { topic: string }
+export type Message = Record<string, any> & { topic: string }
 
 export interface MQEmitter {
   current: number
   concurrent: number
   on(topic: string, listener: (message: Message, done: () => void) => void, callback?: () => void): this
-  emit(topic: string, callback?: (error?: Error) => void): void
+  emit(message: Message, callback?: (error?: Error) => void): void
   removeListener(topic: string, listener: (message: Message, done: () => void) => void, callback?: () => void): void
   close(callback: () => void): void
 }
