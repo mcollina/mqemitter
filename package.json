@@ -51,7 +51,7 @@
     "pre-commit": "^1.2.2",
     "snazzy": "^8.0.0",
     "standard": "^14.3.1",
-    "tape": "^4.13.0",
+    "tape": "^5.0.1",
     "typescript": "^3.7.5"
   },
   "dependencies": {
