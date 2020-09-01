@@ -495,6 +495,35 @@ module.exports = function abstractTests (opts) {
     })
   })
 
+  test('packets are emitted in order', function (t) {
+    const e = builder()
+    const total = 10000
+    const topic = 'test'
+
+    var received = 0
+
+    e.on(topic, function (msg, cb) {
+      var fail = false
+      if (received !== msg.payload) {
+        t.fail(`leak detected. Count: ${received} - Payload: ${msg.payload}`)
+        fail = true
+      }
+
+      received++
+
+      if (fail || received === total) {
+        e.close(function () {
+          t.end()
+        })
+      }
+      cb()
+    })
+
+    for (let payload = 0; payload < total; payload++) {
+      e.emit({ topic, payload })
+    }
+  })
+
   test('calling emit without cb when closed doesn\'t throw error', function (t) {
     const e = builder()
     const msg = Buffer.from('hello')
