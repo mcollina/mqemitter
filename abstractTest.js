@@ -2,8 +2,8 @@
 'use strict'
 
 module.exports = function abstractTests (opts) {
-  var builder = opts.builder
-  var test = opts.test
+  const builder = opts.builder
+  const test = opts.test
 
   test('support on and emit', function (t) {
     t.plan(4)
@@ -93,7 +93,7 @@ module.exports = function abstractTests (opts) {
       topic: 'hello world',
       payload: { my: 'message' }
     }
-    var toRemoveCalled = false
+    let toRemoveCalled = false
 
     function toRemove (message, cb) {
       toRemoveCalled = true
@@ -395,7 +395,7 @@ module.exports = function abstractTests (opts) {
 
   test('close support', function (t) {
     const e = builder()
-    var check = false
+    let check = false
 
     t.notOk(e.closed, 'must have a false closed property')
 
@@ -425,8 +425,8 @@ module.exports = function abstractTests (opts) {
       topic: 'hello/world',
       payload: { my: 'message' }
     }
-    var firstCalled = false
-    var secondCalled = false
+    let firstCalled = false
+    let secondCalled = false
 
     e.on('hello/#', function (message, cb) {
       t.notOk(firstCalled, 'first subscriber must only be called once')
@@ -453,8 +453,8 @@ module.exports = function abstractTests (opts) {
       topic: 'hello/my/world',
       payload: { my: 'message' }
     }
-    var firstCalled = false
-    var secondCalled = false
+    let firstCalled = false
+    let secondCalled = false
 
     e.on('hello/#', function (message, cb) {
       t.notOk(firstCalled, 'first subscriber must only be called once')
@@ -500,10 +500,10 @@ module.exports = function abstractTests (opts) {
     const total = 10000
     const topic = 'test'
 
-    var received = 0
+    let received = 0
 
     e.on(topic, function (msg, cb) {
-      var fail = false
+      let fail = false
       if (received !== msg.payload) {
         t.fail(`leak detected. Count: ${received} - Payload: ${msg.payload}`)
         fail = true

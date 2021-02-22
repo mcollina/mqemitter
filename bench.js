@@ -3,8 +3,8 @@
 const mqemitter = require('./')
 const emitter = mqemitter({ concurrency: 10 })
 const total = 1000000
-var written = 0
-var received = 0
+let written = 0
+let received = 0
 const timerKey = 'time for sending ' + total + ' messages'
 
 function write () {

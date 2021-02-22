@@ -5,7 +5,7 @@ import MQEmitter, { Message } from '../../types/mqemitter'
 
 const noop = function () {}
 
-var mq = MQEmitter()
+let mq = MQEmitter()
 mq = MQEmitter({
   concurrency: 100
 })
