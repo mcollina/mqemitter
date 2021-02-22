@@ -12,7 +12,7 @@ test('queue concurrency', function (t) {
   t.plan(3)
 
   const e = mq({ concurrency: 1 })
-  var completed1 = false
+  let completed1 = false
 
   t.equal(e.concurrency, 1)
 
@@ -54,7 +54,7 @@ test('queue concurrency with overlapping subscriptions', function (t) {
   t.plan(3)
 
   const e = mq({ concurrency: 1 })
-  var completed1 = false
+  let completed1 = false
 
   t.equal(e.concurrency, 1)
 
