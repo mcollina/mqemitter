@@ -3,7 +3,7 @@
   "version": "4.4.0",
   "description": "An Opinionated Message Queue with an emitter-style API",
   "main": "mqemitter.js",
-  "types": "mqemitter.d.ts",
+  "types": "types/mqemitter.d.ts",
   "scripts": {
     "lint": "npm run lint:standard && npm run lint:typescript && npm run lint:markdown",
     "lint:standard": "standard --verbose | snazzy",
@@ -14,7 +14,8 @@
     "unit:cov": "nyc --reporter=text tape test/*.js",
     "typescript": "tsc --project ./test/types/tsconfig.json",
     "test:report": "npm run lint && npm run unit:report && npm run typescript",
-    "test": "npm run lint && npm run unit:cov && npm run typescript"
+    "test:types": "tsd",
+    "test": "npm run lint && npm run unit:cov && tsd && npm run typescript"
   },
   "pre-commit": [
     "test"
@@ -52,6 +53,7 @@
     "snazzy": "^9.0.0",
     "standard": "^15.0.0",
     "tape": "^5.0.1",
+    "tsd": "^0.14.0",
     "typescript": "^4.0.2"
   },
   "dependencies": {
