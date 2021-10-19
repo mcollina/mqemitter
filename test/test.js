@@ -35,7 +35,7 @@ test('queue concurrency', function (t) {
   t.equal(e.length, 1)
 })
 
-test('queue concurrency - 2', function (t) {
+test('queue released when full', function (t) {
   t.plan(20)
 
   const e = mq({ concurrency: 1 })
