@@ -35,6 +35,29 @@ test('queue concurrency', function (t) {
   t.equal(e.length, 1)
 })
 
+test('queue concurrency - 2', function (t) {
+  t.plan(20)
+
+  const e = mq({ concurrency: 1 })
+
+  e.on('hello 1', function (message, cb) {
+    t.ok(true, 'message received')
+    setTimeout(cb, 10)
+  })
+
+  function onSent () {
+    t.ok(true, 'message sent')
+  }
+
+  for (let i = 0; i < 9; i++) {
+    e._messageQueue.push({ topic: 'hello 1' })
+    e._messageCallbacks.push(onSent)
+    e.current++
+  }
+
+  e.emit({ topic: 'hello 1' }, onSent)
+})
+
 test('without any listeners and a callback', function (t) {
   const e = mq()
   const expected = {
