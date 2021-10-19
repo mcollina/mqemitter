@@ -36,7 +36,7 @@ test('queue concurrency', function (t) {
 })
 
 test('queue released when full', function (t) {
-  t.plan(20)
+  t.plan(21)
 
   const e = mq({ concurrency: 1 })
 
@@ -56,6 +56,10 @@ test('queue released when full', function (t) {
   }
 
   e.emit({ topic: 'hello 1' }, onSent)
+
+  process.once('warning', function (warning) {
+    t.equal(warning.message, 'MqEmitter leak detected', 'warning message')
+  })
 })
 
 test('without any listeners and a callback', function (t) {
