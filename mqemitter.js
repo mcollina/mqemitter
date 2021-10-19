@@ -92,6 +92,7 @@ MQEmitter.prototype.emit = function emit (message, cb) {
   if (this.concurrency > 0 && this.current >= this.concurrency) {
     this._messageQueue.push(message)
     this._messageCallbacks.push(cb)
+    this._released()
   } else {
     this._do(message, cb)
   }
