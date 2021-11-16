@@ -58,6 +58,6 @@
   },
   "dependencies": {
     "fastparallel": "^2.3.0",
-    "qlobber": "^5.0.0"
+    "qlobber": "^6.0.0"
   }
 }
