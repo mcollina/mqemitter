@@ -32,13 +32,20 @@ subscribe('hello', a)
 subscribe('hello', b)
 subscribe('hello', c)
 
-mq.emit({ topic: 'hello', payload: 'world' })
+const message = mq.messageFactory('hello', { payload: 'world' })
+mq.emit(message)
 
 a.close()
 b.close()
 c.close()
 
-mq.emit({ topic: 'hello', payload: 'world' })
+// This should be printed at console
+// Error: this message was not created at factory
+//     at MQEmitter.emit (/home/iagocalazans/Documentos/personal/mqemitter/mqemitter.js:120:15)
+//     at Object.<anonymous> (/home/iagocalazans/Documentos/personal/mqemitter/example.js:42:4)
+mq.emit({ topic: 'hello', payload: 'world' }, (err) => {
+  console.log(err)
+})
 
 // const listeners = new Map()
 //

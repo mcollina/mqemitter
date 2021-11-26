@@ -83,10 +83,45 @@ MQEmitter.prototype.removeListener = function removeListener (topic, notify, don
   return this
 }
 
+class Message {
+  constructor (topic) {
+    this.topic = topic
+
+    /**
+     * @private
+     */
+    this._origin = 'factory'
+  }
+}
+
+MQEmitter.prototype.messageFactory = function messageFactory (topic, content) {
+  assert(topic)
+  const message = new Message(topic)
+
+  Object.defineProperty(message, '_origin', {
+    enumerable: false
+  })
+
+  if (content !== undefined) {
+    Object.keys(content).forEach(key => {
+      Object.defineProperty(message, key, {
+        enumerable: true,
+        value: content[key]
+      })
+    })
+  }
+
+  return Object.freeze(message)
+}
+
 MQEmitter.prototype.emit = function emit (message, cb) {
   assert(message)
 
   cb = cb || noop
+
+  if (message._origin !== 'factory') {
+    return cb(new Error('this message was not created at factory'))
+  }
 
   if (this.closed) {
     return cb(new Error('mqemitter is closed'))
