@@ -118,7 +118,7 @@ MQEmitter.prototype._do = function (message, callback) {
   const matches = this._matcher.match(message.topic)
 
   this.current++
-  this._parallel(this, matches, message, callback)
+  this._parallel(this, Array.from(matches), message, callback)
 
   return this
 }
