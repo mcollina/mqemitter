@@ -83,6 +83,17 @@ MQEmitter.prototype.removeListener = function removeListener (topic, notify, don
   return this
 }
 
+MQEmitter.prototype.removeAllListeners = function removeListener (topic, done) {
+  assert(topic)
+  this._matcher.remove(topic)
+
+  if (done) {
+    setImmediate(done)
+  }
+
+  return this
+}
+
 MQEmitter.prototype.emit = function emit (message, cb) {
   assert(message)
 

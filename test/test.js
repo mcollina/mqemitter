@@ -115,6 +115,30 @@ test('removeListener without a callback does not throw', function (t) {
   t.end()
 })
 
+test('removeAllListeners removes listeners', function (t) {
+  const e = mq()
+
+  e.on('hello', function () {
+    t.fail('listener called')
+  })
+
+  e.removeAllListeners('hello', function () {
+    e.emit({ topic: 'hello' }, function () {
+      t.end()
+    })
+  })
+})
+
+test('removeAllListeners without a callback does not throw', function (t) {
+  const e = mq()
+  function fn () {}
+
+  e.on('hello', fn)
+  e.removeAllListeners('hello')
+
+  t.end()
+})
+
 test('set defaults to opts', function (t) {
   const opts = {}
   mq(opts)
