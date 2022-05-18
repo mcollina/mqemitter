@@ -74,12 +74,13 @@ MQEmitter.prototype.on = function on (topic, notify, done) {
 MQEmitter.prototype.removeListener = function removeListener (topic, notify, done) {
   assert(topic)
   assert(notify)
-  this._matcher.remove(topic, notify)
-
-  if (done) {
-    setImmediate(done)
-  }
-
+  const that = this
+  setImmediate(function () {
+    that._matcher.remove(topic, notify)
+    if (done) {
+      setImmediate(done)
+    }
+  })
   return this
 }
 
@@ -116,14 +117,9 @@ MQEmitter.prototype.close = function close (cb) {
 MQEmitter.prototype._do = function (message, callback) {
   this._doing = true
   const matches = this._matcher.match(message.topic)
-  const matchesCopy = new Array(matches.length)
-  for (let i = 0, len = matches.length; i < len; i++) {
-    matchesCopy[i] = matches[i]
-  }
 
   this.current++
-
-  this._parallel(this, matchesCopy, message, callback)
+  this._parallel(this, matches, message, callback)
 
   return this
 }
