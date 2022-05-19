@@ -78,7 +78,7 @@ MQEmitter.prototype.removeListener = function removeListener (topic, notify, don
   setImmediate(function () {
     that._matcher.remove(topic, notify)
     if (done) {
-      setImmediate(done)
+      done()
     }
   })
   return this
