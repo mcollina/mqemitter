@@ -152,3 +152,29 @@ test('set defaults to opts', function (t) {
 
   t.end()
 })
+
+test('removeListener inside messageHandler', function (t) {
+  t.plan(3)
+
+  const e = mq()
+
+  function messageHandler1 (message, cb) {
+    t.ok(true, 'messageHandler1 called')
+    // removes itself
+    e.removeListener('hello', messageHandler1)
+    cb()
+  }
+
+  e.on('hello', messageHandler1)
+
+  function messageHandler2 (message, cb) {
+    t.ok(true, 'messageHandler2 called')
+    cb()
+  }
+
+  e.on('hello', messageHandler2)
+
+  e.emit({ topic: 'hello' }, function () {
+    t.ok(true, 'emit callback received')
+  })
+})

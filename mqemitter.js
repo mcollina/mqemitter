@@ -74,12 +74,13 @@ MQEmitter.prototype.on = function on (topic, notify, done) {
 MQEmitter.prototype.removeListener = function removeListener (topic, notify, done) {
   assert(topic)
   assert(notify)
-  this._matcher.remove(topic, notify)
-
-  if (done) {
-    setImmediate(done)
-  }
-
+  const that = this
+  setImmediate(function () {
+    that._matcher.remove(topic, notify)
+    if (done) {
+      done()
+    }
+  })
   return this
 }
 
