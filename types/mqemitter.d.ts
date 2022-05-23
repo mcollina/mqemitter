@@ -1,9 +1,5 @@
 /// <reference types="node" />
 
-declare function MQEmitter(options?: MQEmitterOptions): MQEmitter
-
-export default MQEmitter
-
 interface MQEmitterOptions {
   concurrency?: number
   matchEmptyLevels?: boolean
@@ -22,3 +18,5 @@ export interface MQEmitter {
   removeListener(topic: string, listener: (message: Message, done: () => void) => void, callback?: () => void): void
   close(callback: () => void): void
 }
+
+export default function (options?: MQEmitterOptions): MQEmitter
