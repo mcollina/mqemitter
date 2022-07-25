@@ -47,7 +47,7 @@
     "@types/node": "^16.11.1",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
-    "markdownlint-cli": "^0.31.1",
+    "markdownlint-cli": "^0.32.1",
     "nyc": "^15.0.0",
     "pre-commit": "^1.2.2",
     "snazzy": "^9.0.0",
