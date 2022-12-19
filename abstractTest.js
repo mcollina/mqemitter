@@ -145,9 +145,12 @@ module.exports = function abstractTests (opts) {
     }
 
     e.emit(expected)
-    t.equal(e.current, 0, 'reset the current messages trackers')
-    e.close(function () {
-      t.pass('closed')
+
+    setImmediate(function () {
+      t.equal(e.current, 0, 'reset the current messages trackers')
+      e.close(function () {
+        t.pass('closed')
+      })
     })
   })
 
