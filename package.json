@@ -30,7 +30,7 @@
   },
   "author": "Matteo Collina <hello@matteocollina.com>",
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "keywords": [
     "emitter",
@@ -45,19 +45,19 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^16.11.1",
-    "@typescript-eslint/eslint-plugin": "^5.25.0",
-    "@typescript-eslint/parser": "^5.25.0",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
     "markdownlint-cli": "^0.31.1",
     "nyc": "^15.0.0",
     "pre-commit": "^1.2.2",
     "snazzy": "^9.0.0",
     "standard": "^17.0.0",
     "tape": "^5.0.1",
-    "tsd": "^0.20.0",
-    "typescript": "^4.0.2"
+    "tsd": "^0.31.0",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "fastparallel": "^2.3.0",
-    "qlobber": "^7.0.0"
+    "fastparallel": "^2.4.1",
+    "qlobber": "^8.0.1"
   }
 }
