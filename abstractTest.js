@@ -3,6 +3,7 @@
 module.exports = function abstractTests (opts) {
   const builder = opts.builder
   const test = opts.test
+  const packetsInOrder = opts.packetsInOrder === undefined ? true : opts.packetsInOrder
 
   test('support on and emit', function (t) {
     t.plan(4)
@@ -503,7 +504,7 @@ module.exports = function abstractTests (opts) {
 
     e.on(topic, function (msg, cb) {
       let fail = false
-      if (received !== msg.payload) {
+      if (packetsInOrder && received !== msg.payload) {
         t.fail(`leak detected. Count: ${received} - Payload: ${msg.payload}`)
         fail = true
       }
