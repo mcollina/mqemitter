@@ -44,14 +44,12 @@
   ],
   "license": "ISC",
   "devDependencies": {
+    "@fastify/pre-commit": "^2.2.0",
     "@types/node": "^22.13.14",
-    "@typescript-eslint/eslint-plugin": "^8.28.0",
-    "@typescript-eslint/parser": "^8.28.0",
     "eslint": "^9.23.0",
     "markdownlint-cli": "^0.44.0",
     "neostandard": "^0.12.1",
     "nyc": "^17.1.0",
-    "@fastify/pre-commit": "^2.2.0",
     "tape": "^5.9.0",
     "tsd": "^0.31.2",
     "typescript": "^5.8.2"
