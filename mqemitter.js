@@ -1,140 +1,154 @@
 'use strict'
 
 const { Qlobber } = require('qlobber')
-const assert = require('assert')
-const fastparallel = require('fastparallel')
+const assert = require('node:assert')
 
-function MQEmitter (opts) {
-  if (!(this instanceof MQEmitter)) {
-    return new MQEmitter(opts)
-  }
+class MQEmitter {
+  constructor (opts = {}) {
+    const that = this
 
-  const that = this
+    opts.matchEmptyLevels = opts.matchEmptyLevels === undefined ? true : !!opts.matchEmptyLevels
+    opts.separator = opts.separator || '/'
+    opts.wildcardOne = opts.wildcardOne || '+'
+    opts.wildcardSome = opts.wildcardSome || '#'
 
-  opts = opts || {}
-  opts.matchEmptyLevels = opts.matchEmptyLevels === undefined ? true : !!opts.matchEmptyLevels
-  opts.separator = opts.separator || '/'
-  opts.wildcardOne = opts.wildcardOne || '+'
-  opts.wildcardSome = opts.wildcardSome || '#'
+    this._messageQueue = []
+    this._messageCallbacks = []
 
-  this._messageQueue = []
-  this._messageCallbacks = []
-  this._parallel = fastparallel({
-    results: false,
-    released
-  })
+    this.concurrency = opts.concurrency || 0
 
-  this.concurrency = opts.concurrency || 0
+    this.current = 0
+    this._doing = false
+    this._matcher = new Qlobber({
+      match_empty_levels: opts.matchEmptyLevels,
+      separator: opts.separator,
+      wildcard_one: opts.wildcardOne,
+      wildcard_some: opts.wildcardSome
+    })
 
-  this.current = 0
-  this._doing = false
-  this._matcher = new Qlobber({
-    match_empty_levels: opts.matchEmptyLevels,
-    separator: opts.separator,
-    wildcard_one: opts.wildcardOne,
-    wildcard_some: opts.wildcardSome
-  })
+    this.closed = false
+    this._released = released
 
-  this.closed = false
-  this._released = released
+    function released () {
+      that.current--
 
-  function released () {
-    that.current--
+      const message = that._messageQueue.shift()
+      const callback = that._messageCallbacks.shift()
 
-    const message = that._messageQueue.shift()
-    const callback = that._messageCallbacks.shift()
-
-    if (message) {
-      that._do(message, callback)
-    } else {
-      that._doing = false
+      if (message) {
+        that._do(message, callback)
+      } else {
+        that._doing = false
+      }
     }
   }
-}
 
-Object.defineProperty(MQEmitter.prototype, 'length', {
-  get: function () {
+  get length () {
     return this._messageQueue.length
-  },
-  enumerable: true
-})
-
-MQEmitter.prototype.on = function on (topic, notify, done) {
-  assert(topic)
-  assert(notify)
-  this._matcher.add(topic, notify)
-
-  if (done) {
-    setImmediate(done)
   }
 
-  return this
-}
+  on (topic, notify, done) {
+    assert(topic)
+    assert(notify)
+    this._matcher.add(topic, notify)
 
-MQEmitter.prototype.removeListener = function removeListener (topic, notify, done) {
-  assert(topic)
-  assert(notify)
-  const that = this
-  setImmediate(function () {
-    that._matcher.remove(topic, notify)
     if (done) {
-      done()
+      setImmediate(done)
     }
-  })
-  return this
-}
 
-MQEmitter.prototype.removeAllListeners = function removeListener (topic, done) {
-  assert(topic)
-  this._matcher.remove(topic)
-
-  if (done) {
-    setImmediate(done)
+    return this
   }
 
-  return this
-}
-
-MQEmitter.prototype.emit = function emit (message, cb) {
-  assert(message)
-
-  cb = cb || noop
-
-  if (this.closed) {
-    return cb(new Error('mqemitter is closed'))
+  removeListener (topic, notify, done) {
+    assert(topic)
+    assert(notify)
+    setImmediate(() => {
+      this._matcher.remove(topic, notify)
+      if (done) {
+        done()
+      }
+    })
+    return this
   }
 
-  if (this.concurrency > 0 && this.current >= this.concurrency) {
-    this._messageQueue.push(message)
-    this._messageCallbacks.push(cb)
-    if (!this._doing) {
-      process.emitWarning('MqEmitter leak detected', { detail: 'For more info check: https://github.com/mcollina/mqemitter/pull/94' })
+  removeAllListeners (topic, done) {
+    assert(topic)
+    this._matcher.remove(topic)
+
+    if (done) {
+      setImmediate(done)
+    }
+
+    return this
+  }
+
+  emit (message, cb = noop) {
+    assert(message)
+
+    if (this.closed) {
+      return cb(new Error('mqemitter is closed'))
+    }
+
+    if (this.concurrency > 0 && this.current >= this.concurrency) {
+      this._messageQueue.push(message)
+      this._messageCallbacks.push(cb)
+      if (!this._doing) {
+        process.emitWarning('MqEmitter leak detected', { detail: 'For more info check: https://github.com/mcollina/mqemitter/pull/94' })
+        this._released()
+      }
+    } else {
+      this._do(message, cb)
+    }
+
+    return this
+  }
+
+  close (cb) {
+    this.closed = true
+    setImmediate(cb)
+
+    return this
+  }
+
+  _do (message, callback) {
+    this._doing = true
+    const matches = this._matcher.match(message.topic)
+    this.current++
+    // short circuit if no matches
+    if (matches.length === 0) {
+      callback()
       this._released()
+      return this
     }
-  } else {
-    this._do(message, cb)
+    // if single match, just call the callback
+    // and we avoid the overhead of Promise.allSettled
+    if (matches.length === 1) {
+      const boundMatch = matches[0].bind(this)
+      boundMatch(message, () => {
+        callback()
+        this._released()
+      })
+      return this
+    }
+    // if multiple matches, use Promise.allSettled to call them
+    // and wait for all of them to finish
+    const promises = matches.map((match) => {
+      const boundMatch = match.bind(this)
+      return new Promise((resolve) => {
+        boundMatch(message, resolve)
+      })
+    })
+
+    Promise.allSettled(promises).then(() => {
+      callback()
+      this._released()
+    })
+
+    return this
   }
-
-  return this
-}
-
-MQEmitter.prototype.close = function close (cb) {
-  this.closed = true
-  setImmediate(cb)
-
-  return this
-}
-
-MQEmitter.prototype._do = function (message, callback) {
-  this._doing = true
-  const matches = this._matcher.match(message.topic)
-
-  this.current++
-  this._parallel(this, matches, message, callback)
-
-  return this
 }
 
 function noop () { }
 
-module.exports = MQEmitter
+module.exports = (opts) => new MQEmitter(opts)
+module.exports.MQEmitter = MQEmitter
