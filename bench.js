@@ -25,6 +25,10 @@ emitter.on('hello', function (msg, cb) {
   setImmediate(cb)
 })
 
+emitter.on('hello', (msg, cb) => {
+  setImmediate(cb)
+})
+
 console.time(timerKey)
 write()
 write()

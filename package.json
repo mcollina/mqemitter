@@ -30,7 +30,7 @@
   },
   "author": "Matteo Collina <hello@matteocollina.com>",
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   },
   "keywords": [
     "emitter",
