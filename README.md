@@ -5,8 +5,6 @@
 ![ci](https://github.com/mcollina/mqemitter/workflows/ci/badge.svg)
 [![Known Vulnerabilities](https://snyk.io/test/github/mcollina/mqemitter/badge.svg)](https://snyk.io/test/github/mcollina/mqemitter)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)\
-[![Dependencies Status](https://david-dm.org/mcollina/mqemitter/status.svg)](https://david-dm.org/mcollina/mqemitter)
-[![devDependencies Status](https://david-dm.org/mcollina/mqemitter/dev-status.svg)](https://david-dm.org/mcollina/mqemitter?type=dev)\
 [![NPM version](https://img.shields.io/npm/v/mqemitter.svg?style=flat)](https://www.npmjs.com/mqemitter)
 [![NPM downloads](https://img.shields.io/npm/dm/mqemitter.svg?style=flat)](https://www.npmjs.com/mqemitter)
 
