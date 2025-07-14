@@ -49,7 +49,7 @@
     "eslint": "^9.23.0",
     "markdownlint-cli": "^0.45.0",
     "neostandard": "^0.12.1",
-    "tsd": "^0.31.2",
+    "tsd": "^0.32.0",
     "typescript": "^5.8.2"
   },
   "dependencies": {
