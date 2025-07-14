@@ -1,6 +1,6 @@
 {
   "name": "mqemitter",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "description": "An Opinionated Message Queue with an emitter-style API",
   "main": "mqemitter.js",
   "types": "mqemitter.d.ts",
