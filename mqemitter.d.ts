@@ -19,7 +19,6 @@ declare namespace mqemitter {
     removeListener(topic: string, listener: (message: Message, done: () => void) => void, callback?: () => void): void
     close(callback: () => void): void
   }
-
 }
 
 declare function mqemitter (options?: MQEmitterOptions): mqemitter.MQEmitter

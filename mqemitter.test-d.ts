@@ -1,6 +1,6 @@
 import { expectError, expectType } from 'tsd'
-import mqEmitter from './mqemitter'
-import type { Message, MQEmitter } from './mqemitter'
+import mqEmitter from '../mqemitter'
+import type { Message, MQEmitter } from '../mqemitter'
 
 expectType<MQEmitter>(mqEmitter())
 
