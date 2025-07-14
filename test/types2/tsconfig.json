@@ -5,8 +5,6 @@
     "moduleResolution": "NodeNext",
     "lib": ["ESNext", "ESNext.Promise"],
     "jsx": "preserve",
-    "declaration": true,
-    "outDir": "dist",
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -20,5 +18,8 @@
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
     "noEmit": true,
-  }
+  },
+  "files": [
+    "./index.ts"
+  ]
 }
