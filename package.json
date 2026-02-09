@@ -46,7 +46,7 @@
     "@fastify/pre-commit": "^2.2.0",
     "@types/node": "^24.0.13",
     "c8": "^10.1.3",
-    "eslint": "^9.23.0",
+    "eslint": "^10.0.0",
     "markdownlint-cli": "^0.45.0",
     "neostandard": "^0.12.1",
     "tsd": "^0.33.0",
