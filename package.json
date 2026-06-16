@@ -3,7 +3,7 @@
   "version": "7.1.0",
   "description": "An Opinionated Message Queue with an emitter-style API",
   "main": "mqemitter.js",
-  "types": "mqemitter.d.ts",
+  "types": "types/mqemitter.d.ts",
   "scripts": {
     "lint:fix": "eslint --fix",
     "lint": "npm run lint:standard && npm run lint:markdown",
@@ -13,8 +13,8 @@
     "unit:cov": "c8 --reporter=lcov npm run unit",
     "postunit:cov": "c8 check-coverage --lines 100 --functions 100 --branches 100",
     "typescript": "tsc --project ./test/types/tsconfig.json && tsc --project ./test/types2/tsconfig.json",
-    "test:types": "tsd",
-    "test": "npm run lint && npm run unit:cov && tsd && npm run typescript"
+    "test:types": "tstyche",
+    "test": "npm run lint && npm run unit:cov && npm run test:types && npm run typescript"
   },
   "pre-commit": [
     "test"
@@ -49,7 +49,7 @@
     "eslint": "^9.23.0",
     "markdownlint-cli": "^0.45.0",
     "neostandard": "^0.12.1",
-    "tsd": "^0.33.0",
+    "tstyche": "^7.2.1",
     "typescript": "^5.8.2"
   },
   "dependencies": {

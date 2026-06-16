@@ -1,7 +1,7 @@
 /* eslint no-unused-vars: 0 */
 /* eslint no-undef: 0 */
 
-import MQEmitter, { Message } from '../../mqemitter'
+import MQEmitter, { Message } from '../../types/mqemitter'
 
 const noop = function () {}
 
