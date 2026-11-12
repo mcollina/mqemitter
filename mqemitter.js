@@ -38,16 +38,35 @@ function MQEmitter (opts) {
   this.closed = false
   this._released = released
 
+  // Releases arriving while the queue drains are counted and handled by the
+  // loop below instead of recursing, so a long queue cannot overflow the stack.
+  // If a subscriber throws, the finally unlocks the loop and gives back the
+  // slots of the releases it did not reach.
+  let releasing = 0
+  let draining = false
+
   function released () {
-    that.current--
+    releasing++
+    if (draining) return
+    draining = true
+    try {
+      while (releasing > 0) {
+        releasing--
+        that.current--
 
-    const message = that._messageQueue.shift()
-    const callback = that._messageCallbacks.shift()
+        const message = that._messageQueue.shift()
+        const callback = that._messageCallbacks.shift()
 
-    if (message) {
-      that._do(message, callback)
-    } else {
-      that._doing = false
+        if (message) {
+          that._do(message, callback)
+        } else {
+          that._doing = false
+        }
+      }
+    } finally {
+      draining = false
+      that.current -= releasing
+      releasing = 0
     }
   }
 }
